@@ -1,0 +1,94 @@
+{
+  "notes": [
+    {
+      "id": "3",
+      "title": "Third note",
+      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio explicabo aperiam et mollitia neque eum, nostrum saepe dolores nemo ipsum.",
+      "collection": "Todo",
+      "createdAt": "2021-05-05T13:06:32.240Z",
+      "updatedAt": "2021-05-05T13:06:32.240Z",
+      "createdBy": "user-1"
+    },
+    {
+      "title": "My next Note",
+      "content": "H3LL0 MY N4M3 15 648R13L",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-10T13:41:03.670Z",
+      "updatedAt": "2021-05-10T13:41:03.670Z",
+      "collection": "Todo",
+      "id": "5aUmj-y"
+    },
+    {
+      "title": "First message of 11.05.21",
+      "content": "Hi there!",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T07:38:16.933Z",
+      "updatedAt": "2021-05-11T07:38:16.933Z",
+      "collection": "Todo",
+      "id": "S-i1ZvE"
+    },
+    {
+      "title": "Hi I am almost deleted",
+      "content": "Yeah I know It doesent matter what is in here...",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T09:18:28.243Z",
+      "updatedAt": "2021-05-11T09:18:28.243Z",
+      "collection": "Todo",
+      "id": "aZ-XPdd"
+    },
+    {
+      "title": "asdadsdasdasdasd",
+      "content": "asdasdasdasdasdasdasdasdasdasd",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T12:51:47.789Z",
+      "updatedAt": "2021-05-11T12:51:47.789Z",
+      "collection": "Todo",
+      "id": "V6ShBTJ"
+    },
+    {
+      "title": "asdasdasd",
+      "content": "frfrfrfrfrf",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T13:36:34.410Z",
+      "updatedAt": "2021-05-11T13:36:34.410Z",
+      "collection": "Personal",
+      "id": "ObU2xjW"
+    },
+    {
+      "title": "Watery Grave is a good land",
+      "content": "You could also play drowned catacomb but it requires an island or a swamp already in play. With watery grave you might have to pay 2 life but oftentimes it is totally woth it. And because watery grave is an island as well as a swamp those two land work perfectly synergetic together.",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T13:58:06.868Z",
+      "updatedAt": "2021-05-11T14:01:01.549Z",
+      "collection": "Todo",
+      "id": "-89315H"
+    },
+    {
+      "title": "Lets see if this works...",
+      "content": "/><script>alert('Ooooh no this shouldn't happen!!')</script>",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T14:40:15.202Z",
+      "updatedAt": "2021-05-11T14:42:09.506Z",
+      "collection": "Personal",
+      "id": "P6zwDAL"
+    },
+    {
+      "title": "stop trying to be funny",
+      "content": "stop trying to be funny",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T15:19:15.993Z",
+      "updatedAt": "2021-05-11T15:19:15.993Z",
+      "collection": "Todo",
+      "id": "yi_oQO6"
+    },
+    {
+      "title": "clean microwave",
+      "content": "Very soon!",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-11T15:20:00.886Z",
+      "updatedAt": "2021-05-11T15:20:13.809Z",
+      "collection": "Todo",
+      "id": "ZAI_QB7"
+    }
+  ]
+}
