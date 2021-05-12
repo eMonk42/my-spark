@@ -3,7 +3,7 @@
     <div
       class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-50 border border-green-600"
     >
-      <ul class="flex space-x-12">
+      <ul class="flex space-x-12 relative">
         <li v-if="$route.path != '/'">
           <router-link to="/" class="">Dashboard</router-link>
         </li>
@@ -24,18 +24,86 @@
             >Logout</router-link
           >
         </li>
+        <li class="absolute -right-12 -top-1">
+          <router-link
+            v-if="$route.path.substr(0, 5) != '/prof'"
+            :to="{ name: 'Profile', params: { userid: $store.state.user.id } }"
+            ><img
+              class="rounded-full w-8"
+              :src="pictures[parseInt(userSettings.profilePic) - 1]"
+              alt=""
+          /></router-link>
+        </li>
       </ul>
     </div>
     <div class="h-14"></div>
   </div>
 </template>
 <script>
+import axios from "axios";
+import p001 from "@/assets/profile-pictures/001.png";
+import p002 from "@/assets/profile-pictures/002.png";
+import p003 from "@/assets/profile-pictures/003.png";
+import p004 from "@/assets/profile-pictures/004.png";
+import p005 from "@/assets/profile-pictures/005.png";
+import p006 from "@/assets/profile-pictures/006.png";
+import p007 from "@/assets/profile-pictures/007.png";
+import p008 from "@/assets/profile-pictures/008.png";
+import p009 from "@/assets/profile-pictures/009.png";
+import p010 from "@/assets/profile-pictures/010.png";
+import p011 from "@/assets/profile-pictures/011.png";
+import p012 from "@/assets/profile-pictures/012.png";
+const pictures = [
+  p001,
+  p002,
+  p003,
+  p004,
+  p005,
+  p006,
+  p007,
+  p008,
+  p009,
+  p010,
+  p011,
+  p012,
+];
 export default {
+  data() {
+    return {
+      pictures,
+      userSettings: {
+        profilePic: "001",
+      },
+    };
+  },
   methods: {
     logout() {
       this.$store.commit("CLEAR");
       this.$router.push({ name: "Login" });
     },
+    async fetchUser() {
+      try {
+        const res2 = await axios.get("http://localhost:3000/users");
+        this.userSettings = await res2.data.filter((user) => {
+          return user.userId == this.$store.state.user.id;
+        })[0];
+        // console.log(this.userSettings);
+        if (!this.userSettings) {
+          const res3 = await axios.post("http://localhost:3000/users", {
+            userId: this.$store.state.user.id,
+            profilePic: "001",
+            nickName: "name yourself here",
+          });
+          this.userSettings = await res3.data;
+          console.log(res3.data);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  },
+  mounted() {
+    this.fetchUser();
   },
 };
 </script>
