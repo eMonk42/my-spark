@@ -7,9 +7,12 @@
         >Create a Note</router-link
       >
     </div>
-    <div id="filter-options" class="flex justify-between my-4">
+    <div
+      id="filter-options"
+      class="flex justify-between my-6 pb-4 border-b border-purple-500"
+    >
       <input
-        class="border border-transparent focus:border-purple-500 mb-8"
+        class="border border-transparent focus:border-purple-500"
         type="search"
         placeholder="Search your Notes"
         v-model="query"
