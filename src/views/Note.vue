@@ -7,7 +7,26 @@
       Delete this Note
     </button>
     <header class="mb-4">
-      <h2 class="text-indigo-500 text-lg">{{ note.collection }}</h2>
+      <!-- <h2 class="text-indigo-500 text-lg">{{ note.collection }}</h2> -->
+      <div name="collection-select">
+        <span id="select" class="border text-gray-500 border-transparent">
+          <select
+            v-model="collection"
+            name=""
+            id="select-tag"
+            class="bg-transparent border border-transparent text-lg text-purple-400"
+            @blur="updateDatabase"
+          >
+            <option value="Personal" class="">Personal</option>
+            <option
+              value="Todo"
+              v-if="value + '' != collection"
+              class="text-gray-500"
+              >Todo</option
+            >
+          </select>
+        </span>
+      </div>
       <input
         type="text"
         v-model="title"
@@ -43,6 +62,7 @@ export default {
       content: "",
       title: "",
       error: "",
+      collection: "",
     };
   },
   methods: {
@@ -55,7 +75,12 @@ export default {
       try {
         await axios.patch(
           "http://localhost:3000/notes/" + this.$route.params.id,
-          { title: this.title, content: this.content, updatedAt: new Date() }
+          {
+            title: this.title,
+            content: this.content,
+            updatedAt: new Date(),
+            collection: this.collection,
+          }
         );
         this.$store.dispatch("notify", "Changes successfully saved!");
         //this.$router.push("/notes/" + this.$route.params.id);
@@ -97,6 +122,7 @@ export default {
       this.note = await response.data;
       this.content = await this.note.content;
       this.title = await this.note.title;
+      this.collection = await this.note.collection;
     },
   },
   async mounted() {

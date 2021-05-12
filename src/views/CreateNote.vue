@@ -13,10 +13,9 @@
         <option value="Personal"> </option>
       </datalist> -->
       <div name="collection-select">
-        <p class="my-2 text-gray-500">
-          What type of Note do you want to create?
-        </p>
-        <label for="select"></label>
+        <label for="select" class="text-gray-500 block mb-4"
+          >Select a Tag for your Note</label
+        >
         <span id="select" class="border border-gray-300 text-gray-500">
           <select
             v-model="collection"
@@ -24,7 +23,7 @@
             id="select-tag"
             class="bg-transparent text-gray-500"
           >
-            <option value="Personal" class="">Personal</option>
+            <option value="0" class="">Personal</option>
             <option value="Todo" class="text-gray-500">Todo</option>
           </select>
         </span>
