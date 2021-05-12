@@ -7,26 +7,28 @@
         >Create a Note</router-link
       >
     </div>
-    <input
-      class="border border-transparent focus:border-purple-500 mb-8"
-      type="search"
-      placeholder="Search your Notes"
-      v-model="query"
-    />
-    <div name="collection-select">
-      <label for="select" class="text-gray-500 block mb-4">Filter by Tag</label>
-      <span id="select" class="text-gray-500">
-        <select
-          v-model="collection"
-          name=""
-          id="select-tag"
-          class="bg-transparent border border-transparent text-lg text-purple-400"
-        >
-          <option value="0" class="">All</option>
-          <option value="Personal" class="text-gray-500">Personal</option>
-          <option value="Todo" class="text-gray-500">Todo</option>
-        </select>
-      </span>
+    <div id="filter-options" class="flex justify-between my-4">
+      <input
+        class="border border-transparent focus:border-purple-500 mb-8"
+        type="search"
+        placeholder="Search your Notes"
+        v-model="query"
+      />
+      <div name="collection-select">
+        <label for="select" class="text-gray-500 mr-4">Filter by Tag</label>
+        <span id="select" class="text-gray-500">
+          <select
+            v-model="collection"
+            name=""
+            id="select-tag"
+            class="bg-transparent border border-transparent text-indigo-500"
+          >
+            <option value="0" class="">All</option>
+            <option value="Personal" class="text-gray-500">Personal</option>
+            <option value="Todo" class="text-gray-500">Todo</option>
+          </select>
+        </span>
+      </div>
     </div>
 
     <div class="relative block" v-for="note in notes" :key="note.id">

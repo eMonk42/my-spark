@@ -89,6 +89,15 @@
       "updatedAt": "2021-05-11T15:20:13.809Z",
       "collection": "Todo",
       "id": "ZAI_QB7"
+    },
+    {
+      "title": "First Note of today",
+      "content": "Today is 05/12/2021 but you probably see already because of the timestamp",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-12T07:25:55.886Z",
+      "updatedAt": "2021-05-12T07:25:55.886Z",
+      "collection": "Todo",
+      "id": "-sF7Uwq"
     }
   ]
 }
