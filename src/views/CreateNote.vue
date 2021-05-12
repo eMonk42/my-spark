@@ -2,6 +2,7 @@
   <div
     class="mx-auto max-w-screen-sm flex-col flex items-center justify-center"
   >
+    <NavBar />
     <h1 class="mx-auto text-purple-600 text-6xl my-4">
       Take a note
     </h1>
@@ -66,18 +67,20 @@
         {{ submitError }}
       </p>
     </form>
-    <div>
+    <!-- <div>
       <router-link
         class="border-2 border-purple-600 rounded-lg px-6 py-2 hover:bg-purple-900"
         to="/"
         >Home</router-link
       >
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
 import axios from "axios";
+import NavBar from "@/components/NavBar.vue";
 export default {
+  components: { NavBar },
   data() {
     return {
       title: "",

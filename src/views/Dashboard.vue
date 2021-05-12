@@ -1,12 +1,13 @@
 <template>
   <div class="p-4 max-w-screen-sm mx-auto">
-    <div class="flex justify-end">
+    <NavBar />
+    <!-- <div class="flex justify-end">
       <router-link
         class="border-2 border-purple-600 rounded-lg px-6 py-2 hover:bg-purple-900"
         :to="{ name: 'CreateNote' }"
         >Create a Note</router-link
       >
-    </div>
+    </div> -->
     <div
       id="filter-options"
       class="flex justify-between my-6 pb-4 border-b border-purple-500"
@@ -75,9 +76,11 @@
 import Vue from "vue";
 import axios from "axios";
 import swal from "sweetalert2";
+import NavBar from "@/components/NavBar.vue";
 
 export default Vue.extend({
   name: "Dashboard",
+  components: { NavBar },
   data() {
     return {
       notes: [],

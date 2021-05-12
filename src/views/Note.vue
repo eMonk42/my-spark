@@ -1,5 +1,6 @@
 <template lang="">
   <div class="py-6 px-4 max-w-screen-sm mx-auto relative">
+    <NavBar />
     <button
       @click="deleteFunction"
       class="absolute top-4 right-2 hover:text-red-400"
@@ -43,19 +44,21 @@
     <div class="text-sm text-right text-gray-400 mt-4">
       {{ new Date(note.createdAt).toLocaleDateString() }}
     </div>
-    <router-link
+    <!-- <router-link
       class="bg-purple-600 px-6 py-2 rounded-lg my-8 inline-block hover:bg-purple-400"
       to="/"
       >Go Back</router-link
-    >
+    > -->
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import swal from "sweetalert2";
+import NavBar from "@/components/NavBar.vue";
 
 export default {
+  components: { NavBar },
   data() {
     return {
       note: {},

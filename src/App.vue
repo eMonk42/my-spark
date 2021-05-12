@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="bg-gray-50 min-h-screen">
     <router-view />
+    <!-- notifications start -->
     <div class="fixed bottom-0 right-0 p-4">
       <transition-group name="notification" tag="div" class="space-y-2">
         <div
@@ -17,9 +18,7 @@
         </div>
       </transition-group>
     </div>
-    <!-- <button @click="$store.dispatch('notify', 'my new notification')">
-      notify
-    </button> -->
+    <!-- notifications end -->
   </div>
 </template>
 
