@@ -16,12 +16,12 @@
         <label for="select" class="text-gray-500 block mb-4"
           >Select a Tag for your Note</label
         >
-        <span id="select" class="border border-gray-300 text-gray-500">
+        <span id="select" class="text-gray-500">
           <select
             v-model="collection"
             name=""
             id="select-tag"
-            class="bg-transparent text-gray-500"
+            class="bg-transparent border border-transparent text-lg text-purple-400"
           >
             <option value="0" class="">Personal</option>
             <option value="Todo" class="text-gray-500">Todo</option>

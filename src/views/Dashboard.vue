@@ -13,10 +13,29 @@
       placeholder="Search your Notes"
       v-model="query"
     />
+    <div name="collection-select">
+      <label for="select" class="text-gray-500 block mb-4">Filter by Tag</label>
+      <span id="select" class="text-gray-500">
+        <select
+          v-model="collection"
+          name=""
+          id="select-tag"
+          class="bg-transparent border border-transparent text-lg text-purple-400"
+        >
+          <option value="0" class="">All</option>
+          <option value="Personal" class="text-gray-500">Personal</option>
+          <option value="Todo" class="text-gray-500">Todo</option>
+        </select>
+      </span>
+    </div>
+
     <div class="relative block" v-for="note in notes" :key="note.id">
       <router-link
         :to="{ name: 'Note', params: { id: note.id } }"
-        v-if="checkForQuery(note)"
+        v-if="
+          checkForQuery(note) &&
+            (collection == 0 || collection == note.collection)
+        "
         class="block border-b my-4 py-2 border-gray-500"
       >
         <button
@@ -59,6 +78,7 @@ export default Vue.extend({
       notes: [],
       query: "",
       isReady: false,
+      collection: 0,
     };
   },
   mounted() {
