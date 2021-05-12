@@ -8,11 +8,6 @@
     </h1>
 
     <form @submit.prevent="submitForm" class="my-16 w-full">
-      <!-- <input v-model="collection" type="text" name="city" list="cityname" />
-      <datalist id="cityname">
-        <option value="Todo"> </option>
-        <option value="Personal"> </option>
-      </datalist> -->
       <div name="collection-select">
         <label for="select" class="text-gray-500 block mb-4"
           >Select a Tag for your Note</label
@@ -67,13 +62,6 @@
         {{ submitError }}
       </p>
     </form>
-    <!-- <div>
-      <router-link
-        class="border-2 border-purple-600 rounded-lg px-6 py-2 hover:bg-purple-900"
-        to="/"
-        >Home</router-link
-      >
-    </div> -->
   </div>
 </template>
 <script>

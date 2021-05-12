@@ -4,12 +4,16 @@
       class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-50 border border-green-600"
     >
       <ul class="flex space-x-12">
-        <li>
-          <router-link to="/" class="text-gray-500">Dashboard</router-link>
+        <li v-if="$route.path != '/'">
+          <router-link to="/" class="">Dashboard</router-link>
         </li>
-        <li>
-          <router-link to="/create-note" class="text-gray-500"
-            >New Note</router-link
+        <li v-if="$route.path != '/create-note'">
+          <router-link to="/create-note" class="">New Note</router-link>
+        </li>
+        <li v-if="!$route.params.userid">
+          <router-link
+            :to="{ name: 'Profile', params: { userid: $store.state.user.id } }"
+            >Profile</router-link
           >
         </li>
         <li>

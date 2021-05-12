@@ -1,13 +1,6 @@
 <template>
   <div class="p-4 max-w-screen-sm mx-auto">
     <NavBar />
-    <!-- <div class="flex justify-end">
-      <router-link
-        class="border-2 border-purple-600 rounded-lg px-6 py-2 hover:bg-purple-900"
-        :to="{ name: 'CreateNote' }"
-        >Create a Note</router-link
-      >
-    </div> -->
     <div
       id="filter-options"
       class="flex justify-between my-6 pb-4 border-b border-purple-500"

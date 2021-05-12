@@ -8,7 +8,6 @@
       Delete this Note
     </button>
     <header class="mb-4">
-      <!-- <h2 class="text-indigo-500 text-lg">{{ note.collection }}</h2> -->
       <div name="collection-select">
         <span id="select" class="border text-gray-500 border-transparent">
           <select
@@ -44,11 +43,6 @@
     <div class="text-sm text-right text-gray-400 mt-4">
       {{ new Date(note.createdAt).toLocaleDateString() }}
     </div>
-    <!-- <router-link
-      class="bg-purple-600 px-6 py-2 rounded-lg my-8 inline-block hover:bg-purple-400"
-      to="/"
-      >Go Back</router-link
-    > -->
   </div>
 </template>
 

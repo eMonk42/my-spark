@@ -6,6 +6,7 @@ import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
 import store from "../store/index";
 import CreateNote from "../views/CreateNote.vue";
+import Profile from "../views/Profile.vue";
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes: Array<RouteConfig> = [
     path: "/create-note",
     name: "CreateNote",
     component: CreateNote,
+  },
+  {
+    path: "/profile/:userid",
+    name: "Profile",
+    component: Profile,
   },
 ];
 
