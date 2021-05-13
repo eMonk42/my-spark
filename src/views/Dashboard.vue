@@ -59,9 +59,10 @@
       @new-note-created="(showCreate = false), fetchAllNotes()"
     />
     <!-- ERRORS AND WARNINGS START -->
+    <!-- NO SEARCH RESULTS -->
     <div
       v-if="checkIfNoResults() && !isLoading && error == ''"
-      class="flex-col mb-8 bg-gray-900 rounded-lg"
+      class="flex-row place-items-center mb-8 bg-gray-900 rounded-lg text-center"
     >
       <i
         class="mx-auto text-6xl far fa-sad-tear opacity-80 text-purple-400 mb-4"
@@ -70,11 +71,11 @@
         Sorry, there are no Notes available that match your search
       </p>
     </div>
-
+    <!-- LOADING -->
     <div class="text-purple-500 text-xl mt-16" v-if="isLoading">
       <img class="mx-auto w-32" :src="loading" alt="" />
     </div>
-
+    <!-- ERROR FETCHING DATA -->
     <div
       class="text-red-500 text-xl text-center mt-16 flex-row place-items-center"
       v-if="error != ''"
@@ -226,7 +227,7 @@
     <!-- END V-FOR NOTES -->
     <!-- START BOTTOM BAR -->
     <div
-      v-if="!checkIfNoResults()"
+      v-if="!checkIfNoResults() && error == '' && !isLoading"
       class="flex justify-center pt-4 "
       :class="{ 'border-t border-gray-500': notes != [] }"
     >
