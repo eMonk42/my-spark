@@ -4,7 +4,7 @@
     <NavBar @create-clicked="showCreate = true" />
     <div
       id="filter-options"
-      class="flex justify-between my-6 pb-4 border-b border-purple-500"
+      class="flex justify-between my-6 pb-4 border-b border-purple-700"
     >
       <input
         class="border border-transparent bg-gray-800 rounded-sm focus:border-purple-500 pl-2"
@@ -40,6 +40,15 @@
 
     <CreateNew v-if="showCreate" @discard-note="showCreate = false" />
 
+    <div v-if="checkIfNoResults()" class="flex-col mb-8">
+      <i
+        class="mx-auto text-6xl far fa-sad-tear opacity-80 text-purple-400 mb-4"
+      ></i>
+      <p class="text-grtay-500">
+        Sorry, there are no Notes available that match your search
+      </p>
+    </div>
+
     <div class="relative block" v-for="note in notes" :key="note.id">
       <div
         v-if="
@@ -50,8 +59,8 @@
       >
         <div
           v-if="checkIfDivider(note)"
-          class="bg-purple-900 opacity-80 mb-2 py-1 flex justify-between cursor-default"
-          @click.prevent=""
+          class="bg-purple-900 opacity-80 mb-2 py-1 flex justify-between cursor-pointer rounded-md"
+          @click="toggleDateByDay(note.createdAt)"
         >
           <p class="pl-2 text-xs text-purple-200 opacity-80">
             {{ new Date(note.createdAt).toLocaleDateString() }}
@@ -63,12 +72,9 @@
               ) == -1
             "
             class="pr-2 text-xs text-purple-200 opacity-80"
-            @click="
-              dateFilter.push(new Date(note.createdAt).toLocaleDateString())
-            "
           >
             <i
-              class="fas fa-angle-up transform hover:scale-150 transition-all duration-100 cursor-pointer"
+              class="fas fa-angle-up transform hover:scale-150 transition-all duration-100"
             ></i>
           </p>
           <p
@@ -78,14 +84,9 @@
               ) != -1
             "
             class="pr-2 text-xs text-purple-200 opacity-80"
-            @click="
-              dateFilter = dateFilter.filter((date) => {
-                return date != new Date(note.createdAt).toLocaleDateString();
-              })
-            "
           >
             <i
-              class="fas fa-angle-down transform hover:scale-150 transition-all duration-100 cursor-pointer"
+              class="fas fa-angle-down transform hover:scale-150 transition-all duration-100"
             ></i>
           </p>
         </div>
@@ -100,16 +101,13 @@
           }"
         >
           <EditNote
+            class="transform-none hover:scale-100"
             v-if="currentlyEditingNote == note.id"
             @note-updated="fetchAllNotes(), (currentlyEditingNote = '')"
             :noteid="note.id"
             @click.prevent=""
           />
-          <div
-            v-else
-            class="hover:scale-105 transform transition-all duration-150"
-            @click="currentlyEditingNote = note.id"
-          >
+          <div v-else class="">
             <div class="flex justify-between">
               <h3 class="text-sm text-indigo-500">
                 {{ note.collection }}
@@ -124,29 +122,51 @@
             <h2 class="mt-2 text-lg font-semibold text-gray-300">
               {{ note.title }}
             </h2>
-            <p class="text-gray-400">
-              {{
-                note.content.length > maxContentLength
-                  ? note.content.substr(0, maxContentLength - 4) + " ..."
-                  : note.content
-              }}
-            </p>
+            <div class="relative">
+              <div
+                v-if="
+                  note.content.length > maxContentLength &&
+                    expandNote != note.id
+                "
+                class="text-gray-400"
+              >
+                {{ note.content.substr(0, maxContentLength - 4) }}
+                <span
+                  class="text-purple-600 text-lg cursor-pointer hover:scale-120 transform transition-all duration-200"
+                  @click="expandNote = note.id"
+                >
+                  ...</span
+                >
+              </div>
+              <div v-else>{{ note.content }}</div>
+              <i
+                class="absolute right-0 bottom-0 far fa-edit text-gray-500 text-sm hover:text-purple-400 hover:scale-110 transform transition-all duration-150 cursor-pointer"
+                @click="currentlyEditingNote = note.id"
+              ></i>
+            </div>
           </div>
           <div class="flex justify-between">
-            <p class="flex text-sm text-gray-600 mt-2 text-right">
+            <p class="flex text-sm text-gray-500 mt-2 text-right">
               Created by
-              <span class="flex ml-2"
-                >{{
-                  userSettings.nickName == "name yourself here"
-                    ? $store.state.user.email
-                    : userSettings.nickName
-                }}
-                <img
-                  class="w-4 rounded-full ml-2"
-                  v-if="userSettings"
-                  :src="pictures[parseInt(userSettings.profilePic) - 1]"
-                  alt="ProfilePic"
-              /></span>
+              <router-link
+                :to="{
+                  name: 'Profile',
+                  params: { userid: $store.state.user.id },
+                }"
+              >
+                <span class="flex ml-2">
+                  {{
+                    userSettings.nickName == "name yourself here"
+                      ? $store.state.user.email
+                      : userSettings.nickName
+                  }}
+                  <img
+                    class="w-4 rounded-full ml-2"
+                    v-if="userSettings"
+                    :src="pictures[parseInt(userSettings.profilePic) - 1]"
+                    alt="ProfilePic"
+                /></span>
+              </router-link>
             </p>
             <p class="text-sm text-gray-400 mt-2 text-right">
               {{ new Date(note.createdAt).toLocaleDateString() }}
@@ -156,7 +176,7 @@
       </div>
     </div>
     <div
-      class="flex justify-center relative pt-4 "
+      class="flex justify-center pt-4 "
       :class="{ 'border-t border-gray-500': notes != [] }"
     >
       <div class="w-8 h-8">
@@ -167,12 +187,6 @@
           ><i class="fas fa-arrow-up text-sm"></i
         ></a>
       </div>
-      <button
-        @click="logout"
-        class="text-sm hover:text-indigo-600 absolute right-0"
-      >
-        Logout
-      </button>
     </div>
     <a id="bottom-anchor" href="#"></a>
   </div>
@@ -225,8 +239,9 @@ export default Vue.extend({
       userSettings: {},
       dateFilter: [],
       pictures,
-      maxContentLength: 256,
+      maxContentLength: 128,
       currentlyEditingNote: "",
+      expandNote: "",
     };
   },
   mounted() {
@@ -360,6 +375,29 @@ export default Vue.extend({
           } else {
             return false;
           }
+        }
+      }
+      return true;
+    },
+    toggleDateByDay(noteDate) {
+      if (
+        this.dateFilter.indexOf(new Date(noteDate).toLocaleDateString()) == -1
+      ) {
+        this.dateFilter.push(new Date(noteDate).toLocaleDateString());
+      } else {
+        this.dateFilter = this.dateFilter.filter((date) => {
+          return date != new Date(noteDate).toLocaleDateString();
+        });
+      }
+    },
+    checkIfNoResults() {
+      if (!this.notes) return true;
+      for (let i = 0; i < this.notes.length; i++) {
+        if (
+          this.checkForQuery(this.notes[i]) &&
+          (this.collection == 0 || this.collection == this.notes[i].collection)
+        ) {
+          return false;
         }
       }
       return true;

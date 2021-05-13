@@ -1,5 +1,7 @@
 <template lang="">
-  <div class="py-6 px-4 max-w-screen-sm mx-auto cursor-default">
+  <div
+    class="py-6 px-4 mx-auto cursor-default shadow-inner rounded-lg border border-gray-500 border-opacity-10 hover:bg-gray-800 transform scale-x-110"
+  >
     <div class="flex justify-between">
       <div name="collection-select">
         <span id="select" class="border text-gray-500 border-transparent">
@@ -8,7 +10,7 @@
             name=""
             id="select-tag"
             class="bg-transparent border border-transparent text-base text-indigo-500"
-            @blur="updateDatabase"
+            @click.prevent=""
           >
             <option value="Personal" class="">Personal</option>
             <option value="Todo" class="text-gray-500">Todo</option>
@@ -25,36 +27,21 @@
     <input
       type="text"
       v-model="title"
-      class="w-full bg-transparent border border-transparent focus:border-purple-600 mt-2 text-lg font-semibold text-gray-300"
-      @blur="updateDatabase"
+      class="w-full bg-transparent border border-transparent focus:border-purple-600 focus:bg-gray-900 mt-2 text-lg font-semibold text-gray-300"
     />
     <p v-if="error != ''" class="text-red-400">{{ error }}</p>
     <textarea
       v-model="content"
-      class="bg-transparent text-gray-400 h-24 leading-relaxed text-lg w-full resize-none border border-transparent focus:border-purple-600"
-      @blur="updateDatabase"
+      class="bg-transparent text-gray-400 h-24 leading-relaxed text-lg w-full resize-none border border-transparent focus:border-purple-600 focus:bg-gray-900"
+      @click.prevent=""
       style="min-height: 12rem;"
     />
-    <!-- <div class="flex justify-between">
-      <p class="flex text-sm text-gray-600 mt-2 text-right">
-        Created by
-        <span class="flex ml-2"
-          >{{
-            userSettings.nickName == "name yourself here"
-              ? $store.state.user.email
-              : userSettings.nickName
-          }}
-          <img
-            class="w-4 rounded-full ml-2"
-            v-if="userSettings"
-            :src="pictures[parseInt(userSettings.profilePic) - 1]"
-            alt="ProfilePic"
-        /></span>
-      </p>
-      <p class="text-sm text-gray-400 mt-2 text-right">
-        {{ new Date(note.createdAt).toLocaleDateString() }}
-      </p>
-    </div> -->
+    <button
+      class="hover:text-red-500 text-sm text-gray-400"
+      @click="updateDatabase"
+    >
+      Done
+    </button>
   </div>
 </template>
 

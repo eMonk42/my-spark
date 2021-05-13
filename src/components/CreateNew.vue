@@ -45,17 +45,15 @@
         />
       </div>
       <div class="flex justify-between">
-        <div class="py-1 px-4">
-          <a
-            class="text-gray-300 hover:text-red-500 text-sm"
-            @click="$emit('discard-note')"
-            href="#"
-            >Discard Note</a
-          >
+        <div
+          class="text-gray-300 py-1 px-4 border border-gray-500 rounded-lg border-opacity-30 hover:border-red-200 hover:border-opacity-20 hover:text-red-500 cursor-pointer"
+          @click="$emit('discard-note')"
+        >
+          <a class=" text-sm" href="#">Discard Note</a>
         </div>
         <div>
           <button
-            class="group relative ml-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-auto py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-purple-200 text-opacity-80 hover:text-white bg-purple-800 bg-opacity-70 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             type="submit"
             style="align-self: flex-end; jsutify-self: flex-end;"
           >

@@ -1,29 +1,27 @@
 <template lang="">
   <div>
     <div
-      class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-900 text-gray-300 border border-green-600"
+      class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-900 text-gray-300 border-b border-purple-700"
     >
       <ul class="flex space-x-12 relative">
         <li v-if="$route.path != '/'">
-          <router-link to="/" class="">Dashboard</router-link>
+          <router-link to="/" class="link">Dashboard</router-link>
         </li>
         <li v-if="$route.path == '/'">
           <!-- <router-link to="/create-note" class="">New Note</router-link> -->
-          <a href="#top-anchor" @click="$emit('create-clicked')" class=""
+          <a href="#top-anchor" @click="$emit('create-clicked')" class="link"
             >New Note</a
           >
         </li>
         <li v-if="!$route.params.userid">
           <router-link
+            class="link"
             :to="{ name: 'Profile', params: { userid: $store.state.user.id } }"
             >Profile</router-link
           >
         </li>
         <li>
-          <router-link
-            to="/login"
-            @click="logout"
-            class="text-sm hover:text-indigo-600"
+          <router-link to="/login" @click="logout" class="link text-sm"
             >Logout</router-link
           >
         </li>
@@ -32,7 +30,7 @@
             v-if="$route.path.substr(0, 5) != '/prof'"
             :to="{ name: 'Profile', params: { userid: $store.state.user.id } }"
             ><img
-              class="rounded-full w-8"
+              class="rounded-full w-8 transform transition-all duration-200 hover:scale-110"
               :src="pictures[parseInt(userSettings.profilePic) - 1]"
               alt=""
           /></router-link>
@@ -110,4 +108,25 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style scoped lang="scss">
+.link {
+  transition: all 0.3s linear;
+  position: relative;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(209, 102, 14);
+  transform: scaleX(0);
+  height: 2px;
+  transform-origin: 0;
+  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s linear;
+}
+.link:hover::after {
+  transform: none;
+}
+</style>

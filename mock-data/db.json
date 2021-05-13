@@ -2,11 +2,11 @@
   "notes": [
     {
       "id": "3",
-      "title": "Third note (edited) - again",
-      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio explicabo aperiam et mollitia neque eum, nostrum saepe dolores nemo ipsum. (edit) and again once more ...",
+      "title": "Third note (edited) - again 2x",
+      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio explicabo aperiam et mollitia neque eum, nostrum saepe dolores nemo ipsum.",
       "collection": "Personal",
       "createdAt": "2021-05-05T13:06:32.240Z",
-      "updatedAt": "2021-05-13T12:21:59.020Z",
+      "updatedAt": "2021-05-13T13:55:56.964Z",
       "createdBy": "user-1"
     },
     {
