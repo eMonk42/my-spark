@@ -36,6 +36,15 @@
           ><span v-if="!showCreate">+</span><span v-if="showCreate">-</span></a
         >
       </div>
+      <div class="w-8 h-8">
+        <a
+          class="bg-gray-800 rounded-full block w-full h-full text-center hover:bg-gray-700 font-bold hover:scale-105 transform transition-all duration-100"
+          href="#"
+          style="padding-top: 2px;"
+          @click="(reverseList = !reverseList), fetchAllNotes()"
+          ><i class="text-sm fas fa-sort"></i
+        ></a>
+      </div>
     </div>
 
     <CreateNew v-if="showCreate" @discard-note="showCreate = false" />
@@ -243,6 +252,7 @@ export default Vue.extend({
       maxContentLength: 128,
       currentlyEditingNote: "",
       expandNote: "",
+      reverseList: false,
     };
   },
   mounted() {
@@ -268,6 +278,7 @@ export default Vue.extend({
     async fetchAllNotes() {
       const response = await axios.get("http://localhost:3000/notes");
       this.notes = response.data;
+      if (this.reverseList) this.notes.reverse();
       this.isReady = true;
     },
     async deleteFunction(id) {
