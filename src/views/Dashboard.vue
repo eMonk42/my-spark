@@ -138,7 +138,7 @@
                   ...</span
                 >
               </div>
-              <div v-else>{{ note.content }}</div>
+              <div v-else class="text-gray-400">{{ note.content }}</div>
               <i
                 class="absolute right-0 bottom-0 far fa-edit text-gray-500 text-sm hover:text-purple-400 hover:scale-110 transform transition-all duration-150 cursor-pointer"
                 @click="currentlyEditingNote = note.id"

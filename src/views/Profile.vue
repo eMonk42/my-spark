@@ -32,7 +32,7 @@
           class="min-w-64 mx-auto grid grid-rows-3 grid-cols-4 grid-flow-col-dense bg-gray-200 bg-opacity-80 rounded-lg p-16 relative"
           @click.prevent=""
         >
-          <p class="absolute top-8 left-16 text-lg font-semibold">
+          <p class="absolute top-8 left-16 text-lg font-semibold text-gray-800">
             Choose you Profile-Picture
           </p>
           <div
