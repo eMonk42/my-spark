@@ -176,6 +176,7 @@
       </div>
     </div>
     <div
+      v-if="!checkIfNoResults()"
       class="flex justify-center pt-4 "
       :class="{ 'border-t border-gray-500': notes != [] }"
     >
