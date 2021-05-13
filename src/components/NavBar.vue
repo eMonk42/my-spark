@@ -1,14 +1,17 @@
 <template lang="">
   <div>
     <div
-      class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-50 border border-green-600"
+      class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-900 text-gray-300 border border-green-600"
     >
       <ul class="flex space-x-12 relative">
         <li v-if="$route.path != '/'">
           <router-link to="/" class="">Dashboard</router-link>
         </li>
-        <li v-if="$route.path != '/create-note'">
-          <router-link to="/create-note" class="">New Note</router-link>
+        <li v-if="$route.path == '/'">
+          <!-- <router-link to="/create-note" class="">New Note</router-link> -->
+          <a href="#top-anchor" @click="$emit('create-clicked')" class=""
+            >New Note</a
+          >
         </li>
         <li v-if="!$route.params.userid">
           <router-link

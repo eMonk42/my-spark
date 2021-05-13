@@ -2,11 +2,11 @@
   "notes": [
     {
       "id": "3",
-      "title": "Third note",
-      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio explicabo aperiam et mollitia neque eum, nostrum saepe dolores nemo ipsum.",
+      "title": "Third note (edited) - again",
+      "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio explicabo aperiam et mollitia neque eum, nostrum saepe dolores nemo ipsum. (edit) and again once more ...",
       "collection": "Personal",
       "createdAt": "2021-05-05T13:06:32.240Z",
-      "updatedAt": "2021-05-12T07:12:25.840Z",
+      "updatedAt": "2021-05-13T12:21:59.020Z",
       "createdBy": "user-1"
     },
     {
@@ -32,7 +32,7 @@
       "content": "Yeah I know It doesent matter what is in here...",
       "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
       "createdAt": "2021-05-11T09:18:28.243Z",
-      "updatedAt": "2021-05-11T09:18:28.243Z",
+      "updatedAt": "2021-05-13T09:44:51.349Z",
       "collection": "Todo",
       "id": "aZ-XPdd"
     },
@@ -59,7 +59,7 @@
       "content": "You could also play drowned catacomb but it requires an island or a swamp already in play. With watery grave you might have to pay 2 life but oftentimes it is totally woth it. And because watery grave is an island as well as a swamp those two land work perfectly synergetic together.",
       "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
       "createdAt": "2021-05-11T13:58:06.868Z",
-      "updatedAt": "2021-05-11T14:01:01.549Z",
+      "updatedAt": "2021-05-13T10:16:19.640Z",
       "collection": "Todo",
       "id": "-89315H"
     },
@@ -98,13 +98,22 @@
       "updatedAt": "2021-05-12T07:25:55.886Z",
       "collection": "Todo",
       "id": "-sF7Uwq"
+    },
+    {
+      "title": "Hello from new CreateNew.vue Component",
+      "content": "this is just a test",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-13T06:02:27.850Z",
+      "updatedAt": "2021-05-13T06:02:27.850Z",
+      "collection": "Personal",
+      "id": "PxykGCB"
     }
   ],
   "users": [
     {
       "id": "1",
       "userId": "2ad7dace-1267-4d65-8931-3925454fbdd3",
-      "profilePic": "007",
+      "profilePic": "004",
       "nickName": "eMonk42"
     },
     {

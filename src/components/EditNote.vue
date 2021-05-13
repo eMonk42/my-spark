@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="py-6 px-4 max-w-screen-sm mx-auto">
+  <div class="py-6 px-4 max-w-screen-sm mx-auto cursor-default">
     <div class="flex justify-between">
       <div name="collection-select">
         <span id="select" class="border text-gray-500 border-transparent">
@@ -7,16 +7,11 @@
             v-model="collection"
             name=""
             id="select-tag"
-            class="bg-transparent border border-transparent text-lg text-purple-400"
+            class="bg-transparent border border-transparent text-base text-indigo-500"
             @blur="updateDatabase"
           >
             <option value="Personal" class="">Personal</option>
-            <option
-              value="Todo"
-              v-if="value + '' != collection"
-              class="text-gray-500"
-              >Todo</option
-            >
+            <option value="Todo" class="text-gray-500">Todo</option>
           </select>
         </span>
       </div>
@@ -40,7 +35,7 @@
       @blur="updateDatabase"
       style="min-height: 12rem;"
     />
-    <div class="flex justify-between">
+    <!-- <div class="flex justify-between">
       <p class="flex text-sm text-gray-600 mt-2 text-right">
         Created by
         <span class="flex ml-2"
@@ -59,7 +54,7 @@
       <p class="text-sm text-gray-400 mt-2 text-right">
         {{ new Date(note.createdAt).toLocaleDateString() }}
       </p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -94,7 +89,7 @@ const pictures = [
 ];
 
 export default {
-  //props: {noteId},
+  props: { noteid: {} },
   data() {
     return {
       note: {},
@@ -114,19 +109,16 @@ export default {
         return;
       }
       try {
-        await axios.patch(
-          "http://localhost:3000/notes/" + this.$route.params.id,
-          {
-            title: this.title,
-            content: this.content,
-            updatedAt: new Date(),
-            collection: this.collection,
-          }
-        );
+        await axios.patch("http://localhost:3000/notes/" + this.note.id, {
+          title: this.title,
+          content: this.content,
+          updatedAt: new Date(),
+          collection: this.collection,
+        });
         this.$store.dispatch("notify", "Changes successfully saved!");
-        //this.$router.push("/notes/" + this.$route.params.id);
+        this.$emit("note-updated");
       } catch (err) {
-        //console.log(err.message);
+        console.log(err.message);
       }
     },
     async deleteNote() {
@@ -158,8 +150,9 @@ export default {
         });
     },
     async fetchData() {
-      const id = this.$route.params.id;
-      const response = await axios.get("http://localhost:3000/notes/" + id);
+      const response = await axios.get(
+        "http://localhost:3000/notes/" + this.noteid
+      );
       this.note = await response.data;
       this.content = await this.note.content;
       this.title = await this.note.title;

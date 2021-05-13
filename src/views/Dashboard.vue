@@ -1,24 +1,25 @@
 <template>
   <div class="p-4 max-w-screen-sm mx-auto">
-    <NavBar />
+    <a id="top-anchor" href="#"></a>
+    <NavBar @create-clicked="showCreate = true" />
     <div
       id="filter-options"
       class="flex justify-between my-6 pb-4 border-b border-purple-500"
     >
       <input
-        class="border border-transparent focus:border-purple-500"
+        class="border border-transparent bg-gray-800 rounded-sm focus:border-purple-500 pl-2"
         type="search"
         placeholder="Search your Notes"
         v-model="query"
       />
-      <div name="collection-select">
+      <div class="pt-1">
         <label for="select" class="text-gray-500 mr-4">Filter by Tag</label>
         <span id="select" class="text-gray-500">
           <select
             v-model="collection"
             name=""
             id="select-tag"
-            class="bg-transparent border border-transparent text-indigo-500"
+            class="bg-transparent border border-transparent text-indigo-500 cursor-pointer"
           >
             <option value="0" class="">All</option>
             <option value="Personal" class="text-gray-500">Personal</option>
@@ -26,42 +27,154 @@
           </select>
         </span>
       </div>
+      <div class="w-8 h-8">
+        <a
+          class="bg-gray-800 rounded-full block w-full h-full text-center hover:bg-gray-700 font-bold hover:scale-105 transform transition-all duration-100"
+          href="#"
+          style="padding-top: 1px;"
+          @click="showCreate = !showCreate"
+          ><span v-if="!showCreate">+</span><span v-if="showCreate">-</span></a
+        >
+      </div>
     </div>
 
+    <CreateNew v-if="showCreate" @discard-note="showCreate = false" />
+
     <div class="relative block" v-for="note in notes" :key="note.id">
-      <router-link
-        :to="{ name: 'Note', params: { id: note.id } }"
+      <div
         v-if="
           checkForQuery(note) &&
             (collection == 0 || collection == note.collection)
         "
-        class="block border-b my-4 py-2 border-gray-500"
+        class="block mt-4"
       >
-        <button
-          class="absolute top-4 right-0 hover:text-red-400"
-          @click.prevent="deleteFunction(note.id)"
+        <div
+          v-if="checkIfDivider(note)"
+          class="bg-purple-900 opacity-80 mb-2 py-1 flex justify-between cursor-default"
+          @click.prevent=""
         >
-          Delete this one
-        </button>
-        <div>
-          <header class="mb-2">
-            <h3 class="text-xs text-indigo-500">
-              {{ note.collection }}
-            </h3>
-            <h2 class="text-lg font-medium">{{ note.title }}</h2>
-          </header>
-          <p>{{ note.content }}</p>
-          <p class="text-sm text-gray-400 mt-2 text-right">
+          <p class="pl-2 text-xs text-purple-200 opacity-80">
             {{ new Date(note.createdAt).toLocaleDateString() }}
           </p>
+          <p
+            v-if="
+              dateFilter.indexOf(
+                new Date(note.createdAt).toLocaleDateString()
+              ) == -1
+            "
+            class="pr-2 text-xs text-purple-200 opacity-80"
+            @click="
+              dateFilter.push(new Date(note.createdAt).toLocaleDateString())
+            "
+          >
+            <i
+              class="fas fa-angle-up transform hover:scale-150 transition-all duration-100 cursor-pointer"
+            ></i>
+          </p>
+          <p
+            v-if="
+              dateFilter.indexOf(
+                new Date(note.createdAt).toLocaleDateString()
+              ) != -1
+            "
+            class="pr-2 text-xs text-purple-200 opacity-80"
+            @click="
+              dateFilter = dateFilter.filter((date) => {
+                return date != new Date(note.createdAt).toLocaleDateString();
+              })
+            "
+          >
+            <i
+              class="fas fa-angle-down transform hover:scale-150 transition-all duration-100 cursor-pointer"
+            ></i>
+          </p>
         </div>
-      </router-link>
+        <div
+          v-if="
+            dateFilter.indexOf(new Date(note.createdAt).toLocaleDateString()) ==
+              -1
+          "
+          class="rounded-sm p-4"
+          :class="{
+            'border-b border-gray-500': checkIfBorder(note),
+          }"
+        >
+          <EditNote
+            v-if="currentlyEditingNote == note.id"
+            @note-updated="fetchAllNotes(), (currentlyEditingNote = '')"
+            :noteid="note.id"
+            @click.prevent=""
+          />
+          <div
+            v-else
+            class="hover:scale-105 transform transition-all duration-150"
+            @click="currentlyEditingNote = note.id"
+          >
+            <div class="flex justify-between">
+              <h3 class="text-sm text-indigo-500">
+                {{ note.collection }}
+              </h3>
+              <button
+                class="hover:text-red-400 text-gray-400 text-sm"
+                @click.prevent="deleteFunction(note.id)"
+              >
+                Delete this one
+              </button>
+            </div>
+            <h2 class="mt-2 text-lg font-semibold text-gray-300">
+              {{ note.title }}
+            </h2>
+            <p class="text-gray-400">
+              {{
+                note.content.length > maxContentLength
+                  ? note.content.substr(0, maxContentLength - 4) + " ..."
+                  : note.content
+              }}
+            </p>
+          </div>
+          <div class="flex justify-between">
+            <p class="flex text-sm text-gray-600 mt-2 text-right">
+              Created by
+              <span class="flex ml-2"
+                >{{
+                  userSettings.nickName == "name yourself here"
+                    ? $store.state.user.email
+                    : userSettings.nickName
+                }}
+                <img
+                  class="w-4 rounded-full ml-2"
+                  v-if="userSettings"
+                  :src="pictures[parseInt(userSettings.profilePic) - 1]"
+                  alt="ProfilePic"
+              /></span>
+            </p>
+            <p class="text-sm text-gray-400 mt-2 text-right">
+              {{ new Date(note.createdAt).toLocaleDateString() }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flex mt-8 justify-end">
-      <button @click="logout" class="text-sm hover:text-indigo-600">
+    <div
+      class="flex justify-center relative pt-4 "
+      :class="{ 'border-t border-gray-500': notes != [] }"
+    >
+      <div class="w-8 h-8">
+        <a
+          class="bg-gray-800 rounded-full block w-full h-full text-center hover:bg-gray-700 hover:scale-105 transform transition-all duration-100"
+          href="#top-anchor"
+          style="padding-top: 3px;"
+          ><i class="fas fa-arrow-up text-sm"></i
+        ></a>
+      </div>
+      <button
+        @click="logout"
+        class="text-sm hover:text-indigo-600 absolute right-0"
+      >
         Logout
       </button>
     </div>
+    <a id="bottom-anchor" href="#"></a>
   </div>
 </template>
 
@@ -70,20 +183,55 @@ import Vue from "vue";
 import axios from "axios";
 import swal from "sweetalert2";
 import NavBar from "@/components/NavBar.vue";
+import CreateNew from "@/components/CreateNew.vue";
+import EditNote from "@/components/EditNote.vue";
+import p001 from "@/assets/profile-pictures/001.png";
+import p002 from "@/assets/profile-pictures/002.png";
+import p003 from "@/assets/profile-pictures/003.png";
+import p004 from "@/assets/profile-pictures/004.png";
+import p005 from "@/assets/profile-pictures/005.png";
+import p006 from "@/assets/profile-pictures/006.png";
+import p007 from "@/assets/profile-pictures/007.png";
+import p008 from "@/assets/profile-pictures/008.png";
+import p009 from "@/assets/profile-pictures/009.png";
+import p010 from "@/assets/profile-pictures/010.png";
+import p011 from "@/assets/profile-pictures/011.png";
+import p012 from "@/assets/profile-pictures/012.png";
+const pictures = [
+  p001,
+  p002,
+  p003,
+  p004,
+  p005,
+  p006,
+  p007,
+  p008,
+  p009,
+  p010,
+  p011,
+  p012,
+];
 
 export default Vue.extend({
   name: "Dashboard",
-  components: { NavBar },
+  components: { NavBar, CreateNew, EditNote },
   data() {
     return {
       notes: [],
       query: "",
       isReady: false,
       collection: 0,
+      showCreate: false,
+      userSettings: {},
+      dateFilter: [],
+      pictures,
+      maxContentLength: 256,
+      currentlyEditingNote: "",
     };
   },
   mounted() {
     this.fetchAllNotes();
+    this.fetchUser();
   },
   methods: {
     logout() {
@@ -121,14 +269,28 @@ export default Vue.extend({
           this.deleteNote(id);
         });
     },
-    checkForQuery(item) {
+    checkForQuery(note) {
       if (!this.isReady) return false;
       const arr = this.query.split(" ");
       let matches = true;
+      const date = new Date(note.createdAt).toLocaleDateString();
+      const dateString =
+        date.replace("/", ".").replace("/", ".") +
+        " 0" +
+        date.replace("/", " ").replace("/", " ") +
+        " 0" +
+        date +
+        " " +
+        date.replace("/", ".0").replace("/", ".") +
+        " 0" +
+        date.replace("/", " 0").replace("/", " ") +
+        " 0" +
+        date.replace("/", "/0");
       arr.forEach((word) => {
         if (
-          (item.content.toLowerCase().indexOf(word.toLowerCase()) !== -1 ||
-            item.title.toLowerCase().indexOf(word.toLowerCase()) !== -1) &&
+          (note.content.toLowerCase().indexOf(word.toLowerCase()) !== -1 ||
+            dateString.toLowerCase().indexOf(word.toLowerCase()) !== -1 ||
+            note.title.toLowerCase().indexOf(word.toLowerCase()) !== -1) &&
           matches
         ) {
           matches = true;
@@ -141,6 +303,66 @@ export default Vue.extend({
       } else {
         return false;
       }
+    },
+    async fetchUser() {
+      try {
+        const res2 = await axios.get("http://localhost:3000/users");
+        this.userSettings = await res2.data.filter((user) => {
+          return user.userId == this.$store.state.user.id;
+        })[0];
+        // console.log(this.userSettings);
+        if (!this.userSettings) {
+          const res3 = await axios.post("http://localhost:3000/users", {
+            userId: this.$store.state.user.id,
+            profilePic: "001",
+            nickName: "name yourself here",
+          });
+          this.userSettings = await res3.data;
+          console.log(res3.data);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    checkIfBorder(note) {
+      //if (this.maxContentLength > 1) return true;
+      if (this.notes == []) return false;
+      const index = this.notes.indexOf(note);
+      if (index == this.notes.length - 1) return false;
+      for (let i = index + 1; i < this.notes.length; i++) {
+        if (
+          this.checkForQuery(this.notes[i]) &&
+          (this.collection == 0 || this.collection == this.notes[i].collection)
+        ) {
+          if (this.checkIfDivider(this.notes[i])) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+    checkIfDivider(note) {
+      if (this.notes == []) return false;
+      const index = this.notes.indexOf(note);
+      if (index == 0) return true;
+      for (let i = index - 1; i >= 0; i--) {
+        if (
+          this.checkForQuery(this.notes[i]) &&
+          (this.collection == 0 || this.collection == this.notes[i].collection)
+        ) {
+          if (
+            new Date(this.notes[index].createdAt).toLocaleDateString() !=
+            new Date(this.notes[i].createdAt).toLocaleDateString()
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+      return true;
     },
   },
 });
