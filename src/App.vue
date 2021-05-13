@@ -6,11 +6,11 @@
     >
       Spark
     </p> -->
-    <img
-      class="fixed w-full h-full top-0 bottom-0 right-0 left-0 bg-cover opacity-10"
+    <!-- <img
+      class="z-0 fixed w-full h-full top-0 bottom-0 right-0 left-0 bg-cover opacity-10"
       :src="bgimage"
       alt="why not?"
-    />
+    /> -->
     <router-view />
     <!-- notifications start -->
     <div class="fixed bottom-0 right-0 p-4">

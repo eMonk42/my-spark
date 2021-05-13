@@ -3,7 +3,10 @@
     <div
       class="fixed flex w-full top-0 left-0 justify-center z-10 p-4 bg-gray-900 text-gray-300 border-b border-purple-700"
     >
-      <ul class="flex space-x-12 relative">
+      <ul class="-ml-4 flex space-x-12 relative">
+        <li id="logo" class="text-purple-500 text-lg font-bold cursor-default">
+          Spark
+        </li>
         <li v-if="$route.path != '/'">
           <router-link to="/" class="link">Dashboard</router-link>
         </li>
@@ -128,6 +131,26 @@ export default {
   transition: all 0.2s linear;
 }
 .link:hover::after {
+  transform: none;
+}
+#logo {
+  transition: all 0.3s linear;
+  position: relative;
+}
+#logo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(117, 47, 163);
+  transform: scaleX(0);
+  height: 2px;
+  transform-origin: 0;
+  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s linear;
+}
+#logo:hover::after {
   transform: none;
 }
 </style>

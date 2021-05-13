@@ -5,6 +5,7 @@
       @create-clicked="showCreate = true"
       :profilePic="pictures[parseInt(userSettings.profilePic) - 1]"
     />
+    <!-- START FILTER OPTIONS -->
     <div
       class="flex justify-between my-6 pb-4 border-b border-purple-700 bg-gray-900"
     >
@@ -14,6 +15,7 @@
         placeholder="Search your Notes"
         v-model="query"
       />
+      <!-- START TAG SELECT -->
       <div class="pt-1">
         <label for="select" class="text-gray-500 mr-4">Filter by Tag</label>
         <span id="select" class="text-gray-500">
@@ -29,6 +31,7 @@
           </select>
         </span>
       </div>
+      <!-- END TAG SELECT -->
       <div class="w-8 h-8">
         <a
           class="bg-gray-800 rounded-full block w-full h-full text-center hover:bg-gray-700 font-bold hover:scale-105 transform transition-all duration-100"
@@ -48,14 +51,18 @@
         ></a>
       </div>
     </div>
+    <!-- END FILTER OPTIONS -->
 
     <CreateNew
       v-if="showCreate"
       @discard-note="showCreate = false"
       @new-note-created="(showCreate = false), fetchAllNotes()"
     />
-
-    <div v-if="checkIfNoResults()" class="flex-col mb-8 bg-gray-900 rounded-lg">
+    <!-- ERRORS AND WARNINGS START -->
+    <div
+      v-if="checkIfNoResults() && !isLoading && error == ''"
+      class="flex-col mb-8 bg-gray-900 rounded-lg"
+    >
       <i
         class="mx-auto text-6xl far fa-sad-tear opacity-80 text-purple-400 mb-4"
       ></i>
@@ -64,14 +71,19 @@
       </p>
     </div>
 
-    <div class="text-purple-500 text-xl text center mt-16" v-if="isLoading">
-      Loading...
+    <div class="text-purple-500 text-xl mt-16" v-if="isLoading">
+      <img class="mx-auto w-32" :src="loading" alt="" />
     </div>
 
-    <div class="text-red-500 text-xl text center mt-16" v-if="error != ''">
-      {{ error }}
+    <div
+      class="text-red-500 text-xl text-center mt-16 flex-row place-items-center"
+      v-if="error != ''"
+    >
+      <i class="text-6xl far fa-frown-open mb-4"></i>
+      <p>{{ error }}</p>
     </div>
-
+    <!-- ERRORS AND WARNINGS END -->
+    <!-- START V-FOR NOTES -->
     <div
       class="relative block bg-gray-900 rounded-lg"
       v-for="note in notes"
@@ -84,6 +96,7 @@
         "
         class="block mt-4"
       >
+        <!-- START DIVIDER -->
         <div
           v-if="checkIfDivider(note)"
           class="bg-purple-900 opacity-80 mb-2 py-1 flex justify-between cursor-pointer rounded-md"
@@ -117,6 +130,8 @@
             ></i>
           </p>
         </div>
+        <!-- END DIVIDER -->
+        <!-- START NOTE-DIV -->
         <div
           v-if="
             dateFilter.indexOf(new Date(note.createdAt).toLocaleDateString()) ==
@@ -134,6 +149,7 @@
             :noteid="note.id"
             @click.prevent=""
           />
+          <!-- START NOTE MAIN -->
           <div v-else class="">
             <div class="flex justify-between">
               <h3 class="text-sm text-indigo-500">
@@ -172,6 +188,8 @@
               ></i>
             </div>
           </div>
+          <!-- END NOTE MAIN -->
+          <!-- START NOTE-BOTTOM -->
           <div class="flex justify-between">
             <p class="flex text-sm text-gray-500 mt-2 text-right">
               Created by
@@ -199,9 +217,14 @@
               {{ new Date(note.createdAt).toLocaleDateString() }}
             </p>
           </div>
+          <!-- END NOTE-BOTTOM -->
         </div>
+        <!-- END NOTE-DIV -->
       </div>
     </div>
+
+    <!-- END V-FOR NOTES -->
+    <!-- START BOTTOM BAR -->
     <div
       v-if="!checkIfNoResults()"
       class="flex justify-center pt-4 "
@@ -216,6 +239,7 @@
         ></a>
       </div>
     </div>
+    <!-- END BOTTOM BAR -->
     <a id="bottom-anchor" href="#"></a>
   </div>
 </template>
@@ -239,6 +263,7 @@ import p009 from "@/assets/profile-pictures/009.png";
 import p010 from "@/assets/profile-pictures/010.png";
 import p011 from "@/assets/profile-pictures/011.png";
 import p012 from "@/assets/profile-pictures/012.png";
+import loading from "@/assets/loading.gif";
 const pictures = [
   p001,
   p002,
@@ -273,6 +298,7 @@ export default Vue.extend({
       reverseList: false,
       isLoading: false,
       error: "",
+      loading,
     };
   },
   mounted() {
@@ -297,7 +323,7 @@ export default Vue.extend({
     },
     async fetchAllNotes() {
       try {
-        this.loading = true;
+        this.isLoading = true;
         this.error = "";
         const response = await axios.get("http://localhost:3000/notes");
         this.notes = response.data;
@@ -307,7 +333,7 @@ export default Vue.extend({
         this.$store.dispatch("notify", err.message);
         this.error = "Something went wrong! Sorry!";
       } finally {
-        this.loading = false;
+        this.isLoading = false;
       }
     },
     async deleteFunction(id) {
