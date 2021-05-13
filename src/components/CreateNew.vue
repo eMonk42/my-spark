@@ -103,14 +103,13 @@ export default {
         } else {
           this.newNote.collection = this.collection;
         }
-        //console.log(this.newNote);
         await axios.post("http://localhost:3000/notes", this.newNote);
-        //let id = await response.data.id;
-        //this.$router.push("/notes/" + id);
         this.$store.dispatch("notify", "Note created successfully!");
+        this.$emit("new-note-created");
       } catch (err) {
         console.log(err.message);
         this.submitError = err.message;
+        this.$store.dispatch("notify", err.message);
       }
     },
   },

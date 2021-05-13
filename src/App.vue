@@ -1,5 +1,16 @@
 <template>
   <div id="app" class="bg-gray-900 min-h-screen text-gray-300">
+    <!-- <p
+      class="text-purple-800 opacity-50 fixed w-full h-full top-0 bottom-0 right-0 left-0 text-center"
+      style="font-size: 48rem;"
+    >
+      Spark
+    </p> -->
+    <img
+      class="fixed w-full h-full top-0 bottom-0 right-0 left-0 bg-cover opacity-10"
+      :src="bgimage"
+      alt="why not?"
+    />
     <router-view />
     <!-- notifications start -->
     <div class="fixed bottom-0 right-0 p-4">
@@ -22,7 +33,22 @@
   </div>
 </template>
 
+<script>
+import bg from "/src/assets/bg01.png";
+const bgimage = bg;
+export default {
+  data() {
+    return {
+      bgimage,
+    };
+  },
+};
+</script>
+
 <style lang="scss">
+#app {
+  background-image: url("/src/assets/bg01.png");
+}
 .notification-item {
   transition: all 1s;
 }

@@ -1,5 +1,11 @@
 <template lang="">
   <div class="p-4 max-w-screen-sm mx-auto">
+    <p
+      class="text-purple-800 opacity-50 fixed w-full h-full top-0 bottom-0 right-0 left-0 text-center"
+      style="font-size: 48rem;"
+    >
+      Spark
+    </p>
     <NavBar />
     <!-- <p>{{ $store.state.user.id }}</p> -->
     <div class="flex">

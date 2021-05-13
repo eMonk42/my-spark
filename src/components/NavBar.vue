@@ -31,7 +31,7 @@
             :to="{ name: 'Profile', params: { userid: $store.state.user.id } }"
             ><img
               class="rounded-full w-8 transform transition-all duration-200 hover:scale-110"
-              :src="pictures[parseInt(userSettings.profilePic) - 1]"
+              :src="profilePic"
               alt=""
           /></router-link>
         </li>
@@ -41,7 +41,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+//import axios from "axios";
 import p001 from "@/assets/profile-pictures/001.png";
 import p002 from "@/assets/profile-pictures/002.png";
 import p003 from "@/assets/profile-pictures/003.png";
@@ -69,12 +69,13 @@ const pictures = [
   p012,
 ];
 export default {
+  props: { profilePic: String },
   data() {
     return {
       pictures,
-      userSettings: {
-        profilePic: "001",
-      },
+      // userSettings: {
+      //   profilePic: "001",
+      // },
     };
   },
   methods: {
@@ -82,30 +83,30 @@ export default {
       this.$store.commit("CLEAR");
       this.$router.push({ name: "Login" });
     },
-    async fetchUser() {
-      try {
-        const res2 = await axios.get("http://localhost:3000/users");
-        this.userSettings = await res2.data.filter((user) => {
-          return user.userId == this.$store.state.user.id;
-        })[0];
-        // console.log(this.userSettings);
-        if (!this.userSettings) {
-          const res3 = await axios.post("http://localhost:3000/users", {
-            userId: this.$store.state.user.id,
-            profilePic: "001",
-            nickName: "name yourself here",
-          });
-          this.userSettings = await res3.data;
-          console.log(res3.data);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
+    // async fetchUser() {
+    //   try {
+    //     const res2 = await axios.get("http://localhost:3000/users");
+    //     this.userSettings = await res2.data.filter((user) => {
+    //       return user.userId == this.$store.state.user.id;
+    //     })[0];
+    //     // console.log(this.userSettings);
+    //     if (!this.userSettings) {
+    //       const res3 = await axios.post("http://localhost:3000/users", {
+    //         userId: this.$store.state.user.id,
+    //         profilePic: "001",
+    //         nickName: "name yourself here",
+    //       });
+    //       this.userSettings = await res3.data;
+    //       console.log(res3.data);
+    //     }
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // },
   },
-  mounted() {
-    this.fetchUser();
-  },
+  // mounted() {
+  //   this.fetchUser();
+  // },
 };
 </script>
 <style scoped lang="scss">

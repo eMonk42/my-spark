@@ -1,10 +1,12 @@
 <template>
-  <div class="p-4 max-w-screen-sm mx-auto">
+  <div class="p-4 max-w-screen-sm mx-auto bg-gray-900" style="z-index: 0;">
     <a id="top-anchor" href="#"></a>
-    <NavBar @create-clicked="showCreate = true" />
+    <NavBar
+      @create-clicked="showCreate = true"
+      :profilePic="pictures[parseInt(userSettings.profilePic) - 1]"
+    />
     <div
-      id="filter-options"
-      class="flex justify-between my-6 pb-4 border-b border-purple-700"
+      class="flex justify-between my-6 pb-4 border-b border-purple-700 bg-gray-900"
     >
       <input
         class="border border-transparent bg-gray-800 rounded-sm focus:border-purple-500 pl-2"
@@ -47,9 +49,13 @@
       </div>
     </div>
 
-    <CreateNew v-if="showCreate" @discard-note="showCreate = false" />
+    <CreateNew
+      v-if="showCreate"
+      @discard-note="showCreate = false"
+      @new-note-created="(showCreate = false), fetchAllNotes()"
+    />
 
-    <div v-if="checkIfNoResults()" class="flex-col mb-8">
+    <div v-if="checkIfNoResults()" class="flex-col mb-8 bg-gray-900 rounded-lg">
       <i
         class="mx-auto text-6xl far fa-sad-tear opacity-80 text-purple-400 mb-4"
       ></i>
@@ -58,7 +64,19 @@
       </p>
     </div>
 
-    <div class="relative block" v-for="note in notes" :key="note.id">
+    <div class="text-purple-500 text-xl text center mt-16" v-if="isLoading">
+      Loading...
+    </div>
+
+    <div class="text-red-500 text-xl text center mt-16" v-if="error != ''">
+      {{ error }}
+    </div>
+
+    <div
+      class="relative block bg-gray-900 rounded-lg"
+      v-for="note in notes"
+      :key="note.id"
+    >
       <div
         v-if="
           checkForQuery(note) &&
@@ -253,6 +271,8 @@ export default Vue.extend({
       currentlyEditingNote: "",
       expandNote: "",
       reverseList: false,
+      isLoading: false,
+      error: "",
     };
   },
   mounted() {
@@ -276,10 +296,19 @@ export default Vue.extend({
       }
     },
     async fetchAllNotes() {
-      const response = await axios.get("http://localhost:3000/notes");
-      this.notes = response.data;
-      if (this.reverseList) this.notes.reverse();
-      this.isReady = true;
+      try {
+        this.loading = true;
+        this.error = "";
+        const response = await axios.get("http://localhost:3000/notes");
+        this.notes = response.data;
+        if (this.reverseList) this.notes.reverse();
+        this.isReady = true;
+      } catch (err) {
+        this.$store.dispatch("notify", err.message);
+        this.error = "Something went wrong! Sorry!";
+      } finally {
+        this.loading = false;
+      }
     },
     async deleteFunction(id) {
       await swal
