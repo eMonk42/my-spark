@@ -218,9 +218,10 @@
                       : userSettings.nickName
                   }}
                   <img
-                    class="w-4 rounded-full ml-2"
+                    class="rounded-full ml-2"
                     v-if="userSettings"
                     :src="pictures[parseInt(userSettings.profilePic) - 1]"
+                    style="height: 20px; width: 20px;"
                     alt="ProfilePic"
                 /></span>
               </router-link>

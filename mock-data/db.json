@@ -6,7 +6,7 @@
       "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio explicabo aperiam et mollitia neque eum, nostrum saepe dolores nemo ipsum.",
       "collection": "Personal",
       "createdAt": "2021-05-05T13:06:32.240Z",
-      "updatedAt": "2021-05-13T17:01:36.089Z",
+      "updatedAt": "2021-05-14T09:46:35.025Z",
       "createdBy": "user-1"
     },
     {
@@ -139,12 +139,13 @@
   "users": [
     {
       "userId": "2ad7dace-1267-4d65-8931-3925454fbdd3",
-      "profilePic": "007",
+      "profilePic": "009",
       "nickName": "eMonk42",
       "tags": [
         "Personal",
         "Todo",
-        "Costum Tag"
+        "Costum Tag",
+        "Belen"
       ],
       "id": 1
     }
