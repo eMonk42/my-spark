@@ -12,8 +12,14 @@
             class="bg-transparent border border-transparent text-base text-indigo-500"
             @click.prevent=""
           >
-            <option value="Personal" class="">Personal</option>
-            <option value="Todo" class="text-gray-500">Todo</option>
+            <option
+              v-for="(tag, index) of userSettings.tags"
+              :key="index"
+              :value="tag"
+              >{{ tag }}</option
+            >
+            <!-- <option value="Personal" class="">Personal</option>
+            <option value="Todo" class="text-gray-500">Todo</option> -->
           </select>
         </span>
       </div>
@@ -36,12 +42,24 @@
       @click.prevent=""
       style="min-height: 12rem;"
     />
-    <button
-      class="hover:text-red-500 text-sm text-gray-400"
-      @click="updateDatabase"
-    >
-      Done
-    </button>
+    <div class="flex justify-between mt-4">
+      <div>
+        <p class="text-gray-500 text-sm">
+          Last modified {{ new Date(note.updatedAt).toLocaleDateString() }} by
+          {{
+            userSettings.nickName == "name yourself here"
+              ? $store.state.user.email
+              : userSettings.nickName
+          }}
+        </p>
+      </div>
+      <button
+        class="hover:text-purple-500 text-sm border border-transparent px-4 py-2 hover:border-purple-500 bg-gray-900 rounded-lg text-gray-400"
+        @click="updateDatabase"
+      >
+        Done
+      </button>
+    </div>
   </div>
 </template>
 

@@ -308,11 +308,9 @@ export default Vue.extend({
       isLoading: false,
       error: "",
       loading,
-      //tags: [],
     };
   },
   mounted() {
-    //this.fetchTags();
     this.fetchAllNotes();
     this.fetchUser();
   },
@@ -410,7 +408,7 @@ export default Vue.extend({
         this.userSettings = await res2.data.filter((user) => {
           return user.userId == this.$store.state.user.id;
         })[0];
-        // console.log(this.userSettings);
+        //console.log(this.userSettings);
         if (!this.userSettings) {
           const res3 = await axios.post("http://localhost:3000/users", {
             userId: this.$store.state.user.id,
@@ -419,7 +417,8 @@ export default Vue.extend({
             tags: ["Personal", "Todo"],
           });
           this.userSettings = await res3.data;
-          console.log(res3.data);
+          console.log("unknown user was saved to database");
+          //console.log(res3.data);
         }
       } catch (err) {
         console.log(err);
@@ -488,14 +487,6 @@ export default Vue.extend({
       }
       return true;
     },
-    // async fetchTags() {
-    //   try {
-    //     const res = await axios.get("http://localhost:3000/tags");
-    //     this.tags = await res.data;
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // },
   },
 });
 </script>

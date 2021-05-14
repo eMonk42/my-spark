@@ -123,18 +123,28 @@
       "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
       "createdAt": "2021-05-14T07:43:29.951Z",
       "updatedAt": "2021-05-14T07:43:29.951Z",
-      "collection": "test",
+      "collection": "my Tag doesen't exist any more :(",
       "id": "RCj_0BY"
+    },
+    {
+      "title": "Thinking about refactoring Dashboard.vue",
+      "content": "It's a total mess right now so come up with ideas for new Components and convinience functions",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-14T08:36:10.772Z",
+      "updatedAt": "2021-05-14T08:36:25.191Z",
+      "collection": "Costum Tag",
+      "id": "UzjEIsk"
     }
   ],
   "users": [
     {
       "userId": "2ad7dace-1267-4d65-8931-3925454fbdd3",
-      "profilePic": "008",
+      "profilePic": "007",
       "nickName": "eMonk42",
       "tags": [
         "Personal",
-        "Todo"
+        "Todo",
+        "Costum Tag"
       ],
       "id": 1
     }

@@ -109,8 +109,12 @@
           name="title"
           placeholder="Title"
         />
-        <p v-if="emptyTitle != ''" class="text-sm text-red-600">
-          {{ emptyTitle }}
+        <p
+          v-if="!checkTitle"
+          @blur="titleIsTouched = true"
+          class="text-sm text-red-600"
+        >
+          That title is invalid because of length
         </p>
       </div>
       <div class="my-4">
@@ -158,21 +162,20 @@ export default {
       content: "",
       newNote: {},
       submitError: "",
-      emptyTitle: "",
       collection: 0,
       showNewTag: false,
       userSettings: {},
       notes: [],
+      titleIsTouched: false,
     };
   },
   methods: {
     async submitForm() {
-      if (this.title == "") {
-        this.emptyTitle = "Please enter a title!";
+      this.titleIsTouched = true;
+      if (!this.checkTitle) {
         return;
       }
       this.error = "";
-      this.emptyTitle = "";
       try {
         this.newNote.title = this.title;
         this.newNote.content = this.content;
@@ -248,7 +251,7 @@ export default {
           if (this.userSettings.tags.indexOf(this.notes[i].collection) == -1) {
             await axios.patch(
               "http://localhost:3000/notes/" + this.notes[i].id,
-              { collection: this.userSettings.tags[0] }
+              { collection: "my Tag doesen't exist any more :(" } //this.userSettings.tags[0] }
             );
           }
         }
@@ -265,6 +268,18 @@ export default {
   mounted() {
     this.fetchAllNotes();
     this.fetchUser();
+  },
+  computed: {
+    checkTitle() {
+      if (!this.titleIsTouched) return true;
+      if (this.title == "") {
+        return false;
+      } else if (this.title.length > 64) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
 };
 </script>
