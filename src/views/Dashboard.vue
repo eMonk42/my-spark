@@ -190,12 +190,12 @@
                   class="text-purple-600 text-lg cursor-pointer hover:scale-120 transform transition-all duration-200"
                   @click="expandNote = note.id"
                 >
-                  ...</span
+                  ... see more</span
                 >
               </div>
               <div v-else class="text-gray-400">{{ note.content }}</div>
               <i
-                class="absolute right-0 bottom-0 far fa-edit text-gray-500 text-sm hover:text-purple-400 hover:scale-110 transform transition-all duration-150 cursor-pointer"
+                class="absolute right-0 bottom-0 far fa-edit text-gray-500 text-sm hover:text-purple-600 hover:scale-110 transform transition-all duration-150 cursor-pointer"
                 @click="currentlyEditingNote = note.id"
               ></i>
             </div>
@@ -357,6 +357,7 @@ export default Vue.extend({
           showCancelButton: true,
           confirmButtonText: "Yes, delete it!",
           cancelButtonText: "No, keep it",
+          background: "#272727",
         })
         .then((res) => {
           if (!res.isConfirmed) return;

@@ -148,6 +148,7 @@ export default {
           showCancelButton: true,
           confirmButtonText: "Yes, delete it!",
           cancelButtonText: "No, keep it",
+          background: "#272727",
         })
         .then((res) => {
           if (!res.isConfirmed) return;

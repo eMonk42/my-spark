@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="bg-gray-900 min-h-screen text-gray-300">
     <p
-      class="text-purple-800 opacity-50 fixed w-full h-full top-0 bottom-0 right-0 left-0 text-center"
+      class="text-purple-900 opacity-70 fixed w-full h-full top-0 bottom-0 right-0 left-0 text-center"
       style="font-size: 48rem; pointer-events: none"
     >
       Spark
