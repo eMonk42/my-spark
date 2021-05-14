@@ -20,10 +20,14 @@
             :key="index"
             class="flex py-2"
           >
-            <input v-model="userSettings.tags[index]" type="text" />
+            <input
+              class="rounded-sm bg-transparent border border-transparent hover:border-purple-500 text-gray-400 pl-2 focus:text-purple-400"
+              v-model="userSettings.tags[index]"
+              type="text"
+            />
             <div>
               <a
-                class="text-white hover:text-red-500 px-2"
+                class="text-gray-400 hover:text-red-500 px-2"
                 href="#"
                 @click="deleteTag(tag)"
                 ><i class="fas fa-trash-alt"></i
@@ -35,7 +39,7 @@
         <div class="flex justify-center">
           <div class="w-8 h-8 mt-4">
             <a
-              class="bg-gray-400 mx-auto rounded-full block w-full h-full text-center hover:bg-gray-500 font-bold hover:scale-105 transform transition-all duration-100"
+              class="bg-gray-400 mx-auto rounded-full block w-full h-full text-center hover:bg-gray-300 font-bold hover:scale-105 transform transition-all duration-100"
               href="#"
               style="padding-top: 1px;"
               @click="userSettings.tags.push('my new Tag')"
@@ -47,7 +51,9 @@
         <div class="flex justify-between mt-8">
           <button
             class="border border-gray-400 text-gray-400 py-2 px-4 rounded-lg hover:border-purple-500 hover:text-purple-300"
-            @click="showNewTag = false"
+            @click="
+              (showNewTag = false), $emit('tags-updated-sof'), fetchUser()
+            "
           >
             Discard
           </button>

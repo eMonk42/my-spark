@@ -63,7 +63,8 @@
       v-if="showCreate"
       @discard-note="showCreate = false"
       @new-note-created="(showCreate = false), fetchAllNotes()"
-      @tags-updated="fetchUser()"
+      @tags-updated="fetchUser(), fetchAllNotes()"
+      @tags-updated-soft="fetchUser()"
     />
     <!-- ERRORS AND WARNINGS START -->
     <!-- NO SEARCH RESULTS -->
@@ -381,7 +382,10 @@ export default Vue.extend({
         " " +
         this.$store.state.user.email +
         " " +
-        this.userSettings.nickName;
+        this.userSettings.nickName +
+        " " +
+        note.collection;
+      //console.log(dateString);
       arr.forEach((word) => {
         if (
           (note.content.toLowerCase().indexOf(word.toLowerCase()) !== -1 ||
