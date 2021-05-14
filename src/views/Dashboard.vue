@@ -1,5 +1,8 @@
 <template>
-  <div class="p-4 max-w-screen-sm mx-auto bg-gray-900" style="z-index: 0;">
+  <div
+    class="p-4 max-w-screen-sm mx-auto bg-gray-900 bg-opacity-80 relative"
+    style="z-index: 999;"
+  >
     <a id="top-anchor" href="#"></a>
     <NavBar
       @create-clicked="showCreate = true"

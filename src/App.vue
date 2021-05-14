@@ -1,16 +1,17 @@
 <template>
   <div id="app" class="bg-gray-900 min-h-screen text-gray-300">
-    <!-- <p
+    <p
       class="text-purple-800 opacity-50 fixed w-full h-full top-0 bottom-0 right-0 left-0 text-center"
-      style="font-size: 48rem;"
+      style="font-size: 48rem; pointer-events: none"
     >
       Spark
-    </p> -->
-    <!-- <img
-      class="z-0 fixed w-full h-full top-0 bottom-0 right-0 left-0 bg-cover opacity-10"
+    </p>
+    <img
+      class="fixed w-full h-full top-0 bottom-0 right-0 left-0 bg-cover opacity-10"
+      style="pointer-events: none"
       :src="bgimage"
       alt="why not?"
-    /> -->
+    />
     <router-view />
     <!-- notifications start -->
     <div class="fixed bottom-0 right-0 p-4">
