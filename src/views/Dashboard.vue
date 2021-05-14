@@ -26,8 +26,14 @@
             class="bg-transparent border border-transparent text-indigo-500 cursor-pointer"
           >
             <option value="0" class="">All</option>
-            <option value="Personal" class="text-gray-500">Personal</option>
-            <option value="Todo" class="text-gray-500">Todo</option>
+            <option
+              v-for="(tag, index) of userSettings.tags"
+              :key="index"
+              :value="tag"
+              >{{ tag }}</option
+            >
+            <!-- <option value="Personal" class="text-gray-500">Personal</option>
+            <option value="Todo" class="text-gray-500">Todo</option> -->
           </select>
         </span>
       </div>
@@ -57,6 +63,7 @@
       v-if="showCreate"
       @discard-note="showCreate = false"
       @new-note-created="(showCreate = false), fetchAllNotes()"
+      @tags-updated="fetchUser()"
     />
     <!-- ERRORS AND WARNINGS START -->
     <!-- NO SEARCH RESULTS -->
@@ -300,9 +307,11 @@ export default Vue.extend({
       isLoading: false,
       error: "",
       loading,
+      //tags: [],
     };
   },
   mounted() {
+    //this.fetchTags();
     this.fetchAllNotes();
     this.fetchUser();
   },
@@ -368,7 +377,11 @@ export default Vue.extend({
         " 0" +
         date.replace("/", " 0").replace("/", " ") +
         " 0" +
-        date.replace("/", "/0");
+        date.replace("/", "/0") +
+        " " +
+        this.$store.state.user.email +
+        " " +
+        this.userSettings.nickName;
       arr.forEach((word) => {
         if (
           (note.content.toLowerCase().indexOf(word.toLowerCase()) !== -1 ||
@@ -399,6 +412,7 @@ export default Vue.extend({
             userId: this.$store.state.user.id,
             profilePic: "001",
             nickName: "name yourself here",
+            tags: ["Personal", "Todo"],
           });
           this.userSettings = await res3.data;
           console.log(res3.data);
@@ -470,6 +484,14 @@ export default Vue.extend({
       }
       return true;
     },
+    // async fetchTags() {
+    //   try {
+    //     const res = await axios.get("http://localhost:3000/tags");
+    //     this.tags = await res.data;
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // },
   },
 });
 </script>

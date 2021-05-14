@@ -1,11 +1,11 @@
 <template lang="">
   <div class="p-4 max-w-screen-sm mx-auto">
-    <p
+    <!-- <p
       class="text-purple-800 opacity-50 fixed w-full h-full top-0 bottom-0 right-0 left-0 text-center"
-      style="font-size: 48rem;"
+      style="font-size: 48rem; z-index: 0;"
     >
       Spark
-    </p>
+    </p> -->
     <NavBar />
     <!-- <p>{{ $store.state.user.id }}</p> -->
     <div class="flex">
@@ -29,6 +29,7 @@
           {{ error }}
         </p>
       </div>
+      <!-- START OF PICTURE SELECT -->
       <div
         class="fixed w-screen h-screen top-0 right-0 bottom-0 left-0 flex place-items-center pt-16 bg-black bg-opacity-20 "
         v-if="showSelection"
@@ -134,6 +135,7 @@ export default {
             userId: this.$store.state.user.id,
             profilePic: "001",
             nickName: "name yourself here",
+            tags: ["Personal", "Todo"],
           });
           this.userSettings = await res3.data;
           console.log(res3.data);
@@ -178,7 +180,7 @@ export default {
       if (!this.userSettings.nickName) return false;
       if (this.userSettings.nickName == "") {
         return false;
-      } else if (this.userSettings.nickName.length > 16) {
+      } else if (this.userSettings.nickName.length > 24) {
         return false;
       }
       return true;

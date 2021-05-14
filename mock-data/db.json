@@ -116,7 +116,27 @@
       "updatedAt": "2021-05-13T17:52:32.843Z",
       "collection": "Todo",
       "id": "fZZgQb2"
+    },
+    {
+      "title": "test",
+      "content": "asdasdasdasdasd",
+      "createdBy": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "createdAt": "2021-05-14T07:32:08.643Z",
+      "updatedAt": "2021-05-14T07:32:08.643Z",
+      "collection": "eMonk",
+      "id": "lc2WCjF"
     }
   ],
-  "users": []
+  "users": [
+    {
+      "userId": "2ad7dace-1267-4d65-8931-3925454fbdd3",
+      "profilePic": "008",
+      "nickName": "eMonk42",
+      "id": 1,
+      "tags": [
+        "Personal",
+        "Todo"
+      ]
+    }
+  ]
 }
