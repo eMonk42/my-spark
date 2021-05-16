@@ -340,6 +340,11 @@ export default Vue.extend({
         this.error = "";
         const response = await axios.get("http://localhost:3000/notes");
         this.notes = response.data;
+        // filter to only display notes created by current user
+        this.notes = this.notes.filter((note) => {
+          return note.createdBy == this.$store.state.user.id;
+        });
+        //------------------------------
         if (this.reverseList) this.notes.reverse();
         this.isReady = true;
       } catch (err) {
