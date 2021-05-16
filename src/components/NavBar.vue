@@ -44,7 +44,6 @@
   </div>
 </template>
 <script>
-//import axios from "axios";
 import p001 from "@/assets/profile-pictures/001.png";
 import p002 from "@/assets/profile-pictures/002.png";
 import p003 from "@/assets/profile-pictures/003.png";
@@ -76,9 +75,6 @@ export default {
   data() {
     return {
       pictures,
-      // userSettings: {
-      //   profilePic: "001",
-      // },
     };
   },
   methods: {
@@ -86,30 +82,7 @@ export default {
       this.$store.commit("CLEAR");
       this.$router.push({ name: "Login" });
     },
-    // async fetchUser() {
-    //   try {
-    //     const res2 = await axios.get("http://localhost:3000/users");
-    //     this.userSettings = await res2.data.filter((user) => {
-    //       return user.userId == this.$store.state.user.id;
-    //     })[0];
-    //     // console.log(this.userSettings);
-    //     if (!this.userSettings) {
-    //       const res3 = await axios.post("http://localhost:3000/users", {
-    //         userId: this.$store.state.user.id,
-    //         profilePic: "001",
-    //         nickName: "name yourself here",
-    //       });
-    //       this.userSettings = await res3.data;
-    //       console.log(res3.data);
-    //     }
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // },
   },
-  // mounted() {
-  //   this.fetchUser();
-  // },
 };
 </script>
 <style scoped lang="scss">

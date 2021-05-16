@@ -148,6 +148,16 @@
         "Belen"
       ],
       "id": 1
+    },
+    {
+      "userId": "4dd6e9d8-1dd2-40bc-a580-c132b016ff81",
+      "profilePic": "005",
+      "nickName": "Bob",
+      "tags": [
+        "Personal",
+        "Todo"
+      ],
+      "id": 2
     }
   ]
 }
