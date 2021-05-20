@@ -34,7 +34,7 @@
             :to="{ name: 'Profile', params: { userid: $store.state.user.id } }"
             ><img
               class="rounded-full w-8 transform transition-all duration-200 hover:scale-110"
-              :src="profilePic"
+              :src="profilepic"
               alt=""
           /></router-link>
         </li>
@@ -71,7 +71,7 @@ const pictures = [
   p012,
 ];
 export default {
-  props: { profilePic: String },
+  props: { profilepic: String },
   data() {
     return {
       pictures,

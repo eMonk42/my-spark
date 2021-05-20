@@ -6,7 +6,11 @@
     <a id="top-anchor" href="#"></a>
     <NavBar
       @create-clicked="showCreate = true"
-      :profilePic="pictures[parseInt(userSettings.profilePic) - 1]"
+      :profilepic="
+        userSettings.profilepic
+          ? pictures[parseInt(userSettings.profilepic) - 1]
+          : pictures[0]
+      "
     />
     <!-- START FILTER OPTIONS -->
     <div
@@ -32,8 +36,8 @@
             <option
               v-for="(tag, index) of userSettings.tags"
               :key="index"
-              :value="tag"
-              >{{ tag }}</option
+              :value="tag.tag_id"
+              >{{ tag.tag_name }}</option
             >
             <!-- <option value="Personal" class="text-gray-500">Personal</option>
             <option value="Todo" class="text-gray-500">Todo</option> -->
@@ -112,15 +116,15 @@
         <div
           v-if="checkIfDivider(note)"
           class="bg-purple-900 opacity-80 mb-2 py-1 flex justify-between cursor-pointer rounded-md"
-          @click="toggleDateByDay(note.createdAt)"
+          @click="toggleDateByDay(note.createdat)"
         >
           <p class="pl-2 text-xs text-purple-200 opacity-80">
-            {{ new Date(note.createdAt).toLocaleDateString() }}
+            {{ new Date(note.createdat).toLocaleDateString() }}
           </p>
           <p
             v-if="
               dateFilter.indexOf(
-                new Date(note.createdAt).toLocaleDateString()
+                new Date(note.createdat).toLocaleDateString()
               ) == -1
             "
             class="pr-2 text-xs text-purple-200 opacity-80"
@@ -132,7 +136,7 @@
           <p
             v-if="
               dateFilter.indexOf(
-                new Date(note.createdAt).toLocaleDateString()
+                new Date(note.createdat).toLocaleDateString()
               ) != -1
             "
             class="pr-2 text-xs text-purple-200 opacity-80"
@@ -146,7 +150,7 @@
         <!-- START NOTE-DIV -->
         <div
           v-if="
-            dateFilter.indexOf(new Date(note.createdAt).toLocaleDateString()) ==
+            dateFilter.indexOf(new Date(note.createdat).toLocaleDateString()) ==
               -1
           "
           class="rounded-sm p-4"
@@ -158,14 +162,19 @@
             class="transform-none hover:scale-100"
             v-if="currentlyEditingNote == note.id"
             @note-updated="fetchAllNotes(), (currentlyEditingNote = '')"
-            :noteid="note.id"
+            :note="note"
             @click.prevent=""
+            @notedeleted="runOnDeleteByEdit"
           />
           <!-- START NOTE MAIN -->
           <div v-else class="">
             <div class="flex justify-between">
-              <h3 class="text-sm text-indigo-500">
-                {{ note.collection }}
+              <h3 v-if="!isLoading" class="text-sm text-indigo-500">
+                {{
+                  userSettings.tags.filter((tag) => {
+                    return tag.tag_id == note.collection;
+                  })[0].tag_name
+                }}
               </h3>
               <button
                 class="hover:text-red-400 text-gray-400 text-sm"
@@ -213,21 +222,21 @@
               >
                 <span class="flex ml-2">
                   {{
-                    userSettings.nickName == "name yourself here"
+                    userSettings.nickname == "name yourself here"
                       ? $store.state.user.email
-                      : userSettings.nickName
+                      : userSettings.nickname
                   }}
                   <img
                     class="rounded-full ml-2"
                     v-if="userSettings"
-                    :src="pictures[parseInt(userSettings.profilePic) - 1]"
+                    :src="pictures[parseInt(userSettings.profilepic) - 1]"
                     style="height: 20px; width: 20px;"
-                    alt="ProfilePic"
+                    alt="Profilepic"
                 /></span>
               </router-link>
             </p>
             <p class="text-sm text-gray-400 mt-2 text-right">
-              {{ new Date(note.createdAt).toLocaleDateString() }}
+              {{ new Date(note.createdat).toLocaleDateString() }}
             </p>
           </div>
           <!-- END NOTE-BOTTOM -->
@@ -316,7 +325,6 @@ export default Vue.extend({
   },
   mounted() {
     this.fetchAllNotes();
-    this.fetchUser();
   },
   methods: {
     logout() {
@@ -325,8 +333,7 @@ export default Vue.extend({
     },
     async deleteNote(id) {
       try {
-        const res = await axios.delete("http://localhost:3000/notes/" + id);
-        console.log(res.data);
+        await axios.delete("http://localhost:3000/notes/" + id);
         this.$store.dispatch("notify", "Note deleted");
         this.fetchAllNotes();
       } catch (err) {
@@ -338,12 +345,13 @@ export default Vue.extend({
       try {
         this.isLoading = true;
         this.error = "";
+        await this.fetchUser();
         const response = await axios.get("http://localhost:3000/notes");
         this.notes = response.data;
         // filter to only display notes created by current user
-        this.notes = this.notes.filter((note) => {
-          return note.createdBy == this.$store.state.user.id;
-        });
+        // this.notes = this.notes.filter((note) => {
+        //   return note.createdBy == this.$store.state.user.id;
+        // });
         //------------------------------
         if (this.reverseList) this.notes.reverse();
         this.isReady = true;
@@ -374,8 +382,8 @@ export default Vue.extend({
       if (!this.isReady) return false;
       const arr = this.query.split(" ");
       let matches = true;
-      const date = new Date(note.createdAt).toLocaleDateString();
-      const dateString =
+      const date = new Date(note.createdat).toLocaleDateString();
+      let dateString =
         date.replace("/", ".").replace("/", ".") +
         " 0" +
         date.replace("/", " ").replace("/", " ") +
@@ -390,10 +398,13 @@ export default Vue.extend({
         " " +
         this.$store.state.user.email +
         " " +
-        this.userSettings.nickName +
-        " " +
-        note.collection;
-      //console.log(dateString);
+        this.userSettings.nickname +
+        " ";
+      if (this.userSettings.tags) {
+        dateString += this.userSettings.tags.filter((tag) => {
+          return tag.tag_id == note.collection;
+        })[0].tag_name;
+      }
       arr.forEach((word) => {
         if (
           (note.content.toLowerCase().indexOf(word.toLowerCase()) !== -1 ||
@@ -412,24 +423,39 @@ export default Vue.extend({
         return false;
       }
     },
+    async fetchTags() {
+      try {
+        const res = await axios.get(
+          "http://localhost:3000/tags/" + this.userSettings.id
+        );
+        this.userSettings.tags = await res.data;
+        //console.log(this.userSettings.tags);
+      } catch (error) {
+        this.$store.dispatch("notify", error.message);
+      }
+    },
     async fetchUser() {
       try {
-        const res2 = await axios.get("http://localhost:3000/users");
-        this.userSettings = await res2.data.filter((user) => {
-          return user.userId == this.$store.state.user.id;
-        })[0];
+        const res2 = await axios.get(
+          "http://localhost:3000/users/" + this.$store.state.user.id
+        );
+        this.userSettings = await res2.data[0];
+        await this.fetchTags();
         //console.log(this.userSettings);
-        if (!this.userSettings) {
-          const res3 = await axios.post("http://localhost:3000/users", {
-            userId: this.$store.state.user.id,
-            profilePic: "001",
-            nickName: "name yourself here",
-            tags: ["Personal", "Todo"],
-          });
-          this.userSettings = await res3.data;
-          console.log("unknown user was saved to database");
-          //console.log(res3.data);
-        }
+        //.filter((user) => {
+        //return user.userId == this.$store.state.user.id;
+        //})[0];
+        // if (!this.userSettings) {
+        //   const res3 = await axios.post("http://localhost:3000/users", {
+        //     userId: this.$store.state.user.id,
+        //     profilepic: "001",
+        //     nickname: "name yourself here",
+        //     tags: ["Personal", "Todo"],
+        //   });
+        //   this.userSettings = await res3.data;
+        //   console.log("unknown user was saved to database");
+        //   //console.log(res3.data);
+        // }
       } catch (err) {
         console.log(err);
       }
@@ -463,8 +489,8 @@ export default Vue.extend({
           (this.collection == 0 || this.collection == this.notes[i].collection)
         ) {
           if (
-            new Date(this.notes[index].createdAt).toLocaleDateString() !=
-            new Date(this.notes[i].createdAt).toLocaleDateString()
+            new Date(this.notes[index].createdat).toLocaleDateString() !=
+            new Date(this.notes[i].createdat).toLocaleDateString()
           ) {
             return true;
           } else {
@@ -479,6 +505,7 @@ export default Vue.extend({
         this.dateFilter.indexOf(new Date(noteDate).toLocaleDateString()) == -1
       ) {
         this.dateFilter.push(new Date(noteDate).toLocaleDateString());
+        console.log(this.dateFilter);
       } else {
         this.dateFilter = this.dateFilter.filter((date) => {
           return date != new Date(noteDate).toLocaleDateString();
@@ -496,6 +523,10 @@ export default Vue.extend({
         }
       }
       return true;
+    },
+    async runOnDeleteByEdit() {
+      this.currentlyEditingNote = "";
+      await this.fetchAllNotes();
     },
   },
 });

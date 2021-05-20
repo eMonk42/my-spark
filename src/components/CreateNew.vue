@@ -73,7 +73,7 @@
         <label for="select" class="text-gray-500 block mb-4"
           >Select a Tag for your Note</label
         >
-        <span id="select" class="text-gray-500">
+        <span v-if="tagsLoaded" id="select" class="text-gray-500">
           <select
             v-model="collection"
             name=""
@@ -83,8 +83,8 @@
             <option
               v-for="(tag, index) of userSettings.tags"
               :key="index"
-              :value="index == 0 ? 0 : tag"
-              >{{ tag }}</option
+              :value="index"
+              >{{ tag.tag_name }}</option
             >
           </select>
         </span>
@@ -165,8 +165,9 @@ export default {
       collection: 0,
       showNewTag: false,
       userSettings: {},
-      notes: [],
+      //notes: [],
       titleIsTouched: false,
+      tagsLoaded: false,
     };
   },
   methods: {
@@ -179,15 +180,20 @@ export default {
       try {
         this.newNote.title = this.title;
         this.newNote.content = this.content;
-        this.newNote.createdBy = this.$store.state.user.id;
-        this.newNote.createdAt = new Date();
-        this.newNote.updatedAt = this.newNote.createdAt;
+        this.newNote.createdby = this.userSettings.id;
+        this.newNote.createdat = new Date();
+        this.newNote.updatedat = this.newNote.createdat;
         if (this.collection == 0) {
-          this.newNote.collection = "Personal";
+          this.newNote.collection = this.userSettings.tags[0].tag_id;
         } else {
-          this.newNote.collection = this.collection;
+          console.log(this.userSettings.tags);
+          this.newNote.collection = this.userSettings.tags.filer((tag) => {
+            return this.collection == tag.tag_id;
+          })[0].tag_id; //this.collection;
+          console.log(this.newNote);
         }
         await axios.post("http://localhost:3000/notes", this.newNote);
+        //console.log(res);
         this.$store.dispatch("notify", "Note created successfully!");
         this.$emit("new-note-created");
       } catch (err) {
@@ -205,38 +211,40 @@ export default {
         return t != tag;
       });
     },
-    async fetchAllNotes() {
+    async fetchTags() {
       try {
-        this.isLoading = true;
-        this.error = "";
-        const response = await axios.get("http://localhost:3000/notes");
-        this.notes = response.data;
-        if (this.reverseList) this.notes.reverse();
-        this.isReady = true;
-      } catch (err) {
-        this.$store.dispatch("notify", err.message);
-        this.error = "Something went wrong! Sorry!";
-      } finally {
-        this.isLoading = false;
+        const res = await axios.get(
+          "http://localhost:3000/tags/" + this.userSettings.id
+        );
+        this.userSettings.tags = await res.data;
+        //console.log(this.userSettings.tags);
+      } catch (error) {
+        this.$store.dispatch("notify", error.message);
       }
     },
     async fetchUser() {
       try {
-        const res2 = await axios.get("http://localhost:3000/users");
-        this.userSettings = await res2.data.filter((user) => {
-          return user.userId == this.$store.state.user.id;
-        })[0];
-        // console.log(this.userSettings);
-        if (!this.userSettings) {
-          const res3 = await axios.post("http://localhost:3000/users", {
-            userId: this.$store.state.user.id,
-            profilePic: "001",
-            nickName: "name yourself here",
-            tags: ["Personal", "Todo"],
-          });
-          this.userSettings = await res3.data;
-          //console.log(res3.data);
-        }
+        this.tagsLoaded = false;
+        const res2 = await axios.get(
+          "http://localhost:3000/users/" + this.$store.state.user.id
+        );
+        this.userSettings = await res2.data[0];
+        await this.fetchTags();
+        this.tagsLoaded = true;
+        //.filter((user) => {
+        //return user.userId == this.$store.state.user.id;
+        //})[0];
+        // if (!this.userSettings) {
+        //   const res3 = await axios.post("http://localhost:3000/users", {
+        //     userId: this.$store.state.user.id,
+        //     profilepic: "001",
+        //     nickname: "name yourself here",
+        //     tags: ["Personal", "Todo"],
+        //   });
+        //   this.userSettings = await res3.data;
+        //   console.log("unknown user was saved to database");
+        //   //console.log(res3.data);
+        // }
       } catch (err) {
         console.log(err);
       }
@@ -266,7 +274,6 @@ export default {
     },
   },
   mounted() {
-    this.fetchAllNotes();
     this.fetchUser();
   },
   computed: {

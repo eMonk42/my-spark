@@ -1,5 +1,6 @@
 <template lang="">
   <div
+    v-if="!isLoading"
     class="py-6 px-4 mx-auto cursor-default shadow-inner rounded-lg border border-gray-500 border-opacity-10 hover:bg-gray-800 transform scale-x-110"
   >
     <div class="flex justify-between">
@@ -15,8 +16,8 @@
             <option
               v-for="(tag, index) of userSettings.tags"
               :key="index"
-              :value="tag"
-              >{{ tag }}</option
+              :value="tag.tag_id"
+              >{{ tag.tag_name }}</option
             >
             <!-- <option value="Personal" class="">Personal</option>
             <option value="Todo" class="text-gray-500">Todo</option> -->
@@ -45,12 +46,8 @@
     <div class="flex justify-between mt-4">
       <div>
         <p class="text-gray-500 text-sm">
-          Last modified {{ new Date(note.updatedAt).toLocaleDateString() }} by
-          {{
-            userSettings.nickName == "name yourself here"
-              ? $store.state.user.email
-              : userSettings.nickName
-          }}
+          Last modified {{ new Date(note.updatedat).toLocaleDateString() }} by
+          {{ userSettings.nickname }}
         </p>
       </div>
       <button
@@ -94,16 +91,17 @@ const pictures = [
 ];
 
 export default {
-  props: { noteid: {} },
+  props: { note: {} },
   data() {
     return {
-      note: {},
+      //note: {},
       content: "",
       title: "",
       error: "",
       collection: "",
       pictures,
       userSettings: {},
+      isLoading: true,
     };
   },
   methods: {
@@ -117,7 +115,7 @@ export default {
         await axios.patch("http://localhost:3000/notes/" + this.note.id, {
           title: this.title,
           content: this.content,
-          updatedAt: new Date(),
+          updatedat: new Date(),
           collection: this.collection,
         });
         this.$store.dispatch("notify", "Changes successfully saved!");
@@ -130,9 +128,7 @@ export default {
       try {
         await axios.delete("http://localhost:3000/notes/" + this.note.id);
         this.$store.dispatch("notify", "Note deleted!");
-        this.$router.push("/");
       } catch (err) {
-        //console.log(err.message);
         this.$store.dispatch(
           "notify",
           "Sorry but I couldn't delete this Note."
@@ -153,6 +149,7 @@ export default {
         .then((res) => {
           if (!res.isConfirmed) return;
           this.deleteNote();
+          this.$emit("notedeleted");
         });
     },
     async fetchData() {
@@ -164,30 +161,52 @@ export default {
       this.title = await this.note.title;
       this.collection = await this.note.collection;
     },
+    async fetchTags() {
+      try {
+        const res = await axios.get(
+          "http://localhost:3000/tags/" + this.userSettings.id
+        );
+        this.userSettings.tags = await res.data;
+        //console.log(this.userSettings.tags);
+      } catch (error) {
+        this.$store.dispatch("notify", error.message);
+      }
+    },
     async fetchUser() {
       try {
-        const res2 = await axios.get("http://localhost:3000/users");
-        this.userSettings = await res2.data.filter((user) => {
-          return user.userId == this.$store.state.user.id;
-        })[0];
-        // console.log(this.userSettings);
-        if (!this.userSettings) {
-          const res3 = await axios.post("http://localhost:3000/users", {
-            userId: this.$store.state.user.id,
-            profilePic: "001",
-            nickName: "name yourself here",
-          });
-          this.userSettings = await res3.data;
-          console.log(res3.data);
-        }
+        const res2 = await axios.get(
+          "http://localhost:3000/users/" + this.$store.state.user.id
+        );
+        this.userSettings = await res2.data[0];
+        await this.fetchTags();
+        //console.log(this.userSettings);
+        //.filter((user) => {
+        //return user.userId == this.$store.state.user.id;
+        //})[0];
+        // if (!this.userSettings) {
+        //   const res3 = await axios.post("http://localhost:3000/users", {
+        //     userId: this.$store.state.user.id,
+        //     profilepic: "001",
+        //     nickname: "name yourself here",
+        //     tags: ["Personal", "Todo"],
+        //   });
+        //   this.userSettings = await res3.data;
+        //   console.log("unknown user was saved to database");
+        //   //console.log(res3.data);
+        // }
       } catch (err) {
         console.log(err);
       }
     },
   },
   async mounted() {
-    this.fetchData();
-    this.fetchUser();
+    this.content = this.note.content;
+    this.title = this.note.title;
+    this.collection = this.note.collection;
+    await this.fetchUser();
+    //console.log(this.userSettings);
+    this.isLoading = false;
+    //await this.fetchData();
     //setInterval(this.fetchData, 10000);
   },
 };
