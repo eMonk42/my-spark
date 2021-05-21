@@ -139,8 +139,8 @@ export default Vue.extend({
       this.passwordTouched = true;
       this.clearErrors();
       if (!this.entireFormIsValid) return;
-      console.log("Submitting Form");
-      console.log("Email:", this.email, "Password:", this.password);
+      // console.log("Submitting Form");
+      // console.log("Email:", this.email, "Password:", this.password);
 
       const email = this.email;
       const password = this.password;
@@ -159,7 +159,7 @@ export default Vue.extend({
             },
           }
         );
-        console.log(response);
+        //console.log(response);
         const { user, token } = response.data;
         this.$store.commit("SET_USER", { user, token });
         this.$router.push({ name: "Dashboard" });

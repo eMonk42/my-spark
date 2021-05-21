@@ -15,15 +15,12 @@
       >
         <!-- ACTUAL CONTENT -->
         <div class="my-auto flex-col">
-          <div
-            v-for="(tag, index) of userSettings.tags"
-            :key="index"
-            class="flex py-2"
-          >
+          <div v-for="(tag, index) of tags" :key="index" class="flex py-2">
             <input
               class="rounded-sm bg-transparent border border-transparent hover:border-purple-500 text-gray-400 pl-2 focus:text-purple-400"
-              v-model="userSettings.tags[index]"
+              v-model="tag.tag_name"
               type="text"
+              @blur="syncTags()"
             />
             <div>
               <a
@@ -42,7 +39,7 @@
               class="bg-gray-400 mx-auto rounded-full block w-full h-full text-center hover:bg-gray-300 font-bold hover:scale-105 transform transition-all duration-100"
               href="#"
               style="padding-top: 1px;"
-              @click="userSettings.tags.push('my new Tag')"
+              @click="tags.push({ tag_name: 'my new Tag' })"
               ><span>+</span></a
             >
           </div>
@@ -81,9 +78,9 @@
             class="bg-transparent border border-transparent text-lg text-indigo-500"
           >
             <option
-              v-for="(tag, index) of userSettings.tags"
+              v-for="(tag, index) of tags"
               :key="index"
-              :value="index"
+              :value="index == 0 ? 0 : tag.tag_id"
               >{{ tag.tag_name }}</option
             >
           </select>
@@ -165,9 +162,9 @@ export default {
       collection: 0,
       showNewTag: false,
       userSettings: {},
-      //notes: [],
       titleIsTouched: false,
       tagsLoaded: false,
+      tags: [],
     };
   },
   methods: {
@@ -183,15 +180,18 @@ export default {
         this.newNote.createdby = this.userSettings.id;
         this.newNote.createdat = new Date();
         this.newNote.updatedat = this.newNote.createdat;
+        //console.log(this.collection);
         if (this.collection == 0) {
-          this.newNote.collection = this.userSettings.tags[0].tag_id;
+          this.newNote.collection = this.tags[0].tag_id;
         } else {
-          console.log(this.userSettings.tags);
-          this.newNote.collection = this.userSettings.tags.filer((tag) => {
-            return this.collection == tag.tag_id;
-          })[0].tag_id; //this.collection;
-          console.log(this.newNote);
+          // console.log(this.tags);
+          // this.newNote.collection = this.tags.filter((tag) => {
+          //   return this.collection == tag.tag_id;
+          // })[0].tag_id; //this.collection;
+          // console.log(this.newNote);
+          this.newNote.collection = this.collection;
         }
+        //console.log(this.newNote);
         await axios.post("http://localhost:3000/notes", this.newNote);
         //console.log(res);
         this.$store.dispatch("notify", "Note created successfully!");
@@ -202,22 +202,32 @@ export default {
         this.$store.dispatch("notify", err.message);
       }
     },
-    deleteTag(tag) {
-      if (this.userSettings.tags.length < 2) {
+    async deleteTag(tag) {
+      if (this.tags.length < 2) {
         this.$store.dispatch("notify", "you must have at least one tag");
         return;
       }
-      this.userSettings.tags = this.userSettings.tags.filter((t) => {
-        return t != tag;
-      });
+      try {
+        const res = await axios.delete(
+          "http://localhost:3000/tags/" +
+            tag.tag_id +
+            "/" +
+            this.userSettings.id
+        );
+        //console.log(res.data);
+        await this.syncTags();
+        await this.fetchTags();
+        this.$store.dispatch("notify", res.data);
+      } catch (err) {
+        console.log(err.message);
+      }
     },
     async fetchTags() {
       try {
         const res = await axios.get(
           "http://localhost:3000/tags/" + this.userSettings.id
         );
-        this.userSettings.tags = await res.data;
-        //console.log(this.userSettings.tags);
+        this.tags = await res.data.tags;
       } catch (error) {
         this.$store.dispatch("notify", error.message);
       }
@@ -231,50 +241,36 @@ export default {
         this.userSettings = await res2.data[0];
         await this.fetchTags();
         this.tagsLoaded = true;
-        //.filter((user) => {
-        //return user.userId == this.$store.state.user.id;
-        //})[0];
-        // if (!this.userSettings) {
-        //   const res3 = await axios.post("http://localhost:3000/users", {
-        //     userId: this.$store.state.user.id,
-        //     profilepic: "001",
-        //     nickname: "name yourself here",
-        //     tags: ["Personal", "Todo"],
-        //   });
-        //   this.userSettings = await res3.data;
-        //   console.log("unknown user was saved to database");
-        //   //console.log(res3.data);
-        // }
       } catch (err) {
         console.log(err);
       }
     },
     async submitTags() {
+      await this.syncTags();
+      this.showNewTag = false;
+    },
+    async syncTags() {
       try {
-        await axios.patch(
-          "http://localhost:3000/users/" + this.userSettings.id,
-          { tags: this.userSettings.tags }
-        );
-        for (let i = 0; i < this.notes.length; i++) {
-          if (this.userSettings.tags.indexOf(this.notes[i].collection) == -1) {
-            await axios.patch(
-              "http://localhost:3000/notes/" + this.notes[i].id,
-              { collection: "my Tag doesen't exist any more :(" } //this.userSettings.tags[0] }
-            );
+        const tagArray = this.tags;
+        //console.log(tagArray);
+        const res = await axios.post(
+          "http://localhost:3000/tags/" + this.userSettings.id,
+          {
+            tagArray,
           }
-        }
-        this.$store.dispatch("notify", "Tags updated!");
-        this.showNewTag = false;
-        this.$emit("tags-updated");
-        //console.log(res.data);
+        );
+        console.log(res.data);
+        //this.showNewTag = false;
+        this.$emit("tags-synced");
       } catch (err) {
         console.log(err.message);
-        this.$store.dispatch("notify", "Error sending Data");
       }
+      return;
     },
   },
   mounted() {
     this.fetchUser();
+    //console.log(this.tags);
   },
   computed: {
     checkTitle() {

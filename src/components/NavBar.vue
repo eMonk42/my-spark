@@ -24,7 +24,7 @@
           >
         </li>
         <li>
-          <router-link to="/login" @click="logout" class="link text-sm"
+          <router-link to="/auth/login" @click="logout" class="link text-sm"
             >Logout</router-link
           >
         </li>

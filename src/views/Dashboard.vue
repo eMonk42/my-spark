@@ -34,7 +34,7 @@
           >
             <option value="0" class="">All</option>
             <option
-              v-for="(tag, index) of userSettings.tags"
+              v-for="(tag, index) of tags"
               :key="index"
               :value="tag.tag_id"
               >{{ tag.tag_name }}</option
@@ -72,6 +72,7 @@
       @new-note-created="(showCreate = false), fetchAllNotes()"
       @tags-updated="fetchUser(), fetchAllNotes()"
       @tags-updated-soft="fetchUser()"
+      @tags-synced="fetchTags()"
     />
     <!-- ERRORS AND WARNINGS START -->
     <!-- NO SEARCH RESULTS -->
@@ -169,12 +170,13 @@
           <!-- START NOTE MAIN -->
           <div v-else class="">
             <div class="flex justify-between">
-              <h3 v-if="!isLoading" class="text-sm text-indigo-500">
-                {{
-                  userSettings.tags.filter((tag) => {
+              <h3 class="text-sm text-indigo-500">
+                <!-- {{
+                  tags.filter((tag) => {
                     return tag.tag_id == note.collection;
                   })[0].tag_name
-                }}
+                }} -->
+                {{ tagName(note) }}
               </h3>
               <button
                 class="hover:text-red-400 text-gray-400 text-sm"
@@ -312,13 +314,17 @@ export default Vue.extend({
       collection: 0,
       showCreate: false,
       userSettings: {},
+      tags: [
+        { tag_id: 1, tag_name: "Personal" },
+        { tag_id: 2, tag_name: "Todo" },
+      ],
       dateFilter: [],
       pictures,
       maxContentLength: 128,
       currentlyEditingNote: "",
       expandNote: "",
       reverseList: false,
-      isLoading: false,
+      isLoading: true,
       error: "",
       loading,
     };
@@ -346,6 +352,7 @@ export default Vue.extend({
         this.isLoading = true;
         this.error = "";
         await this.fetchUser();
+        await this.fetchTags();
         const response = await axios.get("http://localhost:3000/notes");
         this.notes = response.data;
         // filter to only display notes created by current user
@@ -400,10 +407,12 @@ export default Vue.extend({
         " " +
         this.userSettings.nickname +
         " ";
-      if (this.userSettings.tags) {
-        dateString += this.userSettings.tags.filter((tag) => {
+      if (!this.isLoading && this.isReady && this.tags) {
+        //console.log(this.tags, note.collection);
+        let tag = this.tags.filter((tag) => {
           return tag.tag_id == note.collection;
-        })[0].tag_name;
+        })[0]; //.tag_name;
+        if (tag) dateString += tag.tag_name;
       }
       arr.forEach((word) => {
         if (
@@ -428,8 +437,8 @@ export default Vue.extend({
         const res = await axios.get(
           "http://localhost:3000/tags/" + this.userSettings.id
         );
-        this.userSettings.tags = await res.data;
-        //console.log(this.userSettings.tags);
+        this.tags = await res.data.tags;
+        //console.log(this.tags);
       } catch (error) {
         this.$store.dispatch("notify", error.message);
       }
@@ -440,22 +449,7 @@ export default Vue.extend({
           "http://localhost:3000/users/" + this.$store.state.user.id
         );
         this.userSettings = await res2.data[0];
-        await this.fetchTags();
-        //console.log(this.userSettings);
-        //.filter((user) => {
-        //return user.userId == this.$store.state.user.id;
-        //})[0];
-        // if (!this.userSettings) {
-        //   const res3 = await axios.post("http://localhost:3000/users", {
-        //     userId: this.$store.state.user.id,
-        //     profilepic: "001",
-        //     nickname: "name yourself here",
-        //     tags: ["Personal", "Todo"],
-        //   });
-        //   this.userSettings = await res3.data;
-        //   console.log("unknown user was saved to database");
-        //   //console.log(res3.data);
-        // }
+        //await this.fetchTags();
       } catch (err) {
         console.log(err);
       }
@@ -527,6 +521,16 @@ export default Vue.extend({
     async runOnDeleteByEdit() {
       this.currentlyEditingNote = "";
       await this.fetchAllNotes();
+    },
+    tagName(note) {
+      //console.log("tagName() here");
+      for (let i = 0; i < this.tags.length; i++) {
+        if (this.tags[i].tag_id == note.collection) {
+          //console.log("was here");
+          return this.tags[i].tag_name;
+        }
+      }
+      return "";
     },
   },
 });

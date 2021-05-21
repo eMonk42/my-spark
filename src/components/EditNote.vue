@@ -14,7 +14,7 @@
             @click.prevent=""
           >
             <option
-              v-for="(tag, index) of userSettings.tags"
+              v-for="(tag, index) of tags"
               :key="index"
               :value="tag.tag_id"
               >{{ tag.tag_name }}</option
@@ -63,45 +63,21 @@
 <script>
 import axios from "axios";
 import swal from "sweetalert2";
-import p001 from "@/assets/profile-pictures/001.png";
-import p002 from "@/assets/profile-pictures/002.png";
-import p003 from "@/assets/profile-pictures/003.png";
-import p004 from "@/assets/profile-pictures/004.png";
-import p005 from "@/assets/profile-pictures/005.png";
-import p006 from "@/assets/profile-pictures/006.png";
-import p007 from "@/assets/profile-pictures/007.png";
-import p008 from "@/assets/profile-pictures/008.png";
-import p009 from "@/assets/profile-pictures/009.png";
-import p010 from "@/assets/profile-pictures/010.png";
-import p011 from "@/assets/profile-pictures/011.png";
-import p012 from "@/assets/profile-pictures/012.png";
-const pictures = [
-  p001,
-  p002,
-  p003,
-  p004,
-  p005,
-  p006,
-  p007,
-  p008,
-  p009,
-  p010,
-  p011,
-  p012,
-];
 
 export default {
   props: { note: {} },
   data() {
     return {
-      //note: {},
       content: "",
       title: "",
       error: "",
       collection: "",
-      pictures,
       userSettings: {},
       isLoading: true,
+      tags: [
+        { tag_id: 1, tag_name: "Personal" },
+        { tag_id: 2, tag_name: "Todo" },
+      ],
     };
   },
   methods: {
@@ -118,6 +94,7 @@ export default {
           updatedat: new Date(),
           collection: this.collection,
         });
+        //console.log(res.data);
         this.$store.dispatch("notify", "Changes successfully saved!");
         this.$emit("note-updated");
       } catch (err) {
@@ -166,8 +143,7 @@ export default {
         const res = await axios.get(
           "http://localhost:3000/tags/" + this.userSettings.id
         );
-        this.userSettings.tags = await res.data;
-        //console.log(this.userSettings.tags);
+        this.tags = await res.data.tags;
       } catch (error) {
         this.$store.dispatch("notify", error.message);
       }
