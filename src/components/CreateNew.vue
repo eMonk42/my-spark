@@ -194,7 +194,12 @@ export default {
         //console.log(this.newNote);
         await axios.post(
           process.env.VUE_APP_SPARK_DB_URL + "/notes",
-          this.newNote
+          this.newNote,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         //console.log(res);
         this.$store.dispatch("notify", "Note created successfully!");
@@ -216,7 +221,12 @@ export default {
             "/tags/" +
             tag.tag_id +
             "/" +
-            this.userSettings.id
+            this.userSettings.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         //console.log(res.data);
         await this.syncTags();
@@ -229,7 +239,12 @@ export default {
     async fetchTags() {
       try {
         const res = await axios.get(
-          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id
+          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.tags = await res.data.tags;
       } catch (error) {
@@ -263,6 +278,11 @@ export default {
           process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id,
           {
             tagArray,
+          },
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
           }
         );
         console.log(res.data);

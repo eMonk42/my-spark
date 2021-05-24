@@ -138,7 +138,12 @@ export default {
         const res2 = await axios.get(
           process.env.VUE_APP_SPARK_DB_URL +
             "/users/" +
-            this.$store.state.user.id
+            this.$store.state.user.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.userSettings = await res2.data[0];
       } catch (err) {
@@ -170,7 +175,12 @@ export default {
         //console.log(this.userSettings);
         const res = await axios.patch(
           process.env.VUE_APP_SPARK_DB_URL + "/users",
-          this.userSettings
+          this.userSettings,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.userSettings = res.data;
         //console.log(this.userSettings);

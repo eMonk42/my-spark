@@ -339,7 +339,11 @@ export default Vue.extend({
     },
     async deleteNote(id) {
       try {
-        await axios.delete(process.env.VUE_APP_SPARK_DB_URL + "/notes/" + id);
+        await axios.delete(process.env.VUE_APP_SPARK_DB_URL + "/notes/" + id, {
+          headers: {
+            authorization: this.$store.state.token,
+          },
+        });
         this.$store.dispatch("notify", "Note deleted");
         this.fetchAllNotes();
       } catch (err) {
@@ -354,13 +358,14 @@ export default Vue.extend({
         await this.fetchUser();
         await this.fetchTags();
         const response = await axios.get(
-          process.env.VUE_APP_SPARK_DB_URL + "/notes"
+          process.env.VUE_APP_SPARK_DB_URL + "/notes",
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.notes = response.data;
-        // filter to only display notes created by current user
-        // this.notes = this.notes.filter((note) => {
-        //   return note.createdBy == this.$store.state.user.id;
-        // });
         //------------------------------
         if (this.reverseList) this.notes.reverse();
         this.isReady = true;
@@ -437,7 +442,12 @@ export default Vue.extend({
     async fetchTags() {
       try {
         const res = await axios.get(
-          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id
+          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.tags = await res.data.tags;
         //console.log(this.tags);
@@ -450,7 +460,12 @@ export default Vue.extend({
         const res2 = await axios.get(
           process.env.VUE_APP_SPARK_DB_URL +
             "/users/" +
-            this.$store.state.user.id
+            this.$store.state.user.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.userSettings = await res2.data[0];
         //await this.fetchTags();

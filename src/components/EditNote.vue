@@ -95,6 +95,11 @@ export default {
             content: this.content,
             updatedat: new Date(),
             collection: this.collection,
+          },
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
           }
         );
         //console.log(res.data);
@@ -107,7 +112,12 @@ export default {
     async deleteNote() {
       try {
         await axios.delete(
-          process.env.VUE_APP_SPARK_DB_URL + "/notes/" + this.note.id
+          process.env.VUE_APP_SPARK_DB_URL + "/notes/" + this.note.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.$store.dispatch("notify", "Note deleted!");
       } catch (err) {
@@ -136,7 +146,12 @@ export default {
     },
     async fetchData() {
       const response = await axios.get(
-        process.env.VUE_APP_SPARK_DB_URL + "/notes/" + this.noteid
+        process.env.VUE_APP_SPARK_DB_URL + "/notes/" + this.noteid,
+        {
+          headers: {
+            authorization: this.$store.state.token,
+          },
+        }
       );
       this.note = await response.data;
       this.content = await this.note.content;
@@ -146,7 +161,12 @@ export default {
     async fetchTags() {
       try {
         const res = await axios.get(
-          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id
+          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.tags = await res.data.tags;
       } catch (error) {
@@ -158,7 +178,12 @@ export default {
         const res2 = await axios.get(
           process.env.VUE_APP_SPARK_DB_URL +
             "/users/" +
-            this.$store.state.user.id
+            this.$store.state.user.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.userSettings = await res2.data[0];
         await this.fetchTags();
