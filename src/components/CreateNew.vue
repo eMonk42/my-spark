@@ -192,7 +192,7 @@ export default {
           this.newNote.collection = this.collection;
         }
         //console.log(this.newNote);
-        await axios.post("http://localhost:3000/notes", this.newNote);
+        await axios.post(process.env.SPARK_DB_URL + "/notes", this.newNote);
         //console.log(res);
         this.$store.dispatch("notify", "Note created successfully!");
         this.$emit("new-note-created");
@@ -209,7 +209,8 @@ export default {
       }
       try {
         const res = await axios.delete(
-          "http://localhost:3000/tags/" +
+          process.env.SPARK_DB_URL +
+            "/tags/" +
             tag.tag_id +
             "/" +
             this.userSettings.id
@@ -225,7 +226,7 @@ export default {
     async fetchTags() {
       try {
         const res = await axios.get(
-          "http://localhost:3000/tags/" + this.userSettings.id
+          process.env.SPARK_DB_URL + "/tags/" + this.userSettings.id
         );
         this.tags = await res.data.tags;
       } catch (error) {
@@ -254,7 +255,7 @@ export default {
         const tagArray = this.tags;
         //console.log(tagArray);
         const res = await axios.post(
-          "http://localhost:3000/tags/" + this.userSettings.id,
+          process.env.SPARK_DB_URL + "/tags/" + this.userSettings.id,
           {
             tagArray,
           }

@@ -132,44 +132,11 @@ export default {
     };
   },
   methods: {
-    // async fetchUser() {
-    //   try {
-    //     this.fetchError = false;
-    //     const res = await axios.get(
-    //       "http://gabriel.devhausleipzig.de:9011/api/user/" +
-    //         this.$store.state.user.id,
-    //       {
-    //         headers: {
-    //           Authorization: process.env.VUE_APP_FUSION_AUTH_API_KEY,
-    //         },
-    //       }
-    //     );
-    //     //console.log(res.data);
-    //     this.user = await res.data.user;
-    //     const res2 = await axios.get("http://localhost:3000/users");
-    //     this.userSettings = await res2.data.filter((user) => {
-    //       return user.userId == res.data.user.id;
-    //     })[0];
-    //     if (!this.userSettings) {
-    //       const res3 = await axios.post("http://localhost:3000/users", {
-    //         userId: this.$store.state.user.id,
-    //         profilePic: "001",
-    //         nickName: "name yourself here",
-    //         tags: ["Personal", "Todo"],
-    //       });
-    //       this.userSettings = await res3.data;
-    //       console.log(res3.data);
-    //     }
-    //   } catch (err) {
-    //     console.log(err);
-    //     this.fetchError = true;
-    //   }
-    // },
     async fetchUser() {
       try {
         this.isLoading = true;
         const res2 = await axios.get(
-          "http://localhost:3000/users/" + this.$store.state.user.id
+          process.env.SPARK_DB_URL + "/users/" + this.$store.state.user.id
         );
         this.userSettings = await res2.data[0];
       } catch (err) {
@@ -200,7 +167,7 @@ export default {
       try {
         //console.log(this.userSettings);
         const res = await axios.patch(
-          "http://localhost:3000/users",
+          process.env.SPARK_DB_URL + "/users",
           this.userSettings
         );
         this.userSettings = res.data;

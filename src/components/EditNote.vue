@@ -88,7 +88,7 @@ export default {
         return;
       }
       try {
-        await axios.patch("http://localhost:3000/notes/" + this.note.id, {
+        await axios.patch(process.env.SPARK_DB_URL + "/notes/" + this.note.id, {
           title: this.title,
           content: this.content,
           updatedat: new Date(),
@@ -103,7 +103,7 @@ export default {
     },
     async deleteNote() {
       try {
-        await axios.delete("http://localhost:3000/notes/" + this.note.id);
+        await axios.delete(process.env.SPARK_DB_URL + "/notes/" + this.note.id);
         this.$store.dispatch("notify", "Note deleted!");
       } catch (err) {
         this.$store.dispatch(
@@ -131,7 +131,7 @@ export default {
     },
     async fetchData() {
       const response = await axios.get(
-        "http://localhost:3000/notes/" + this.noteid
+        process.env.SPARK_DB_URL + "/notes/" + this.noteid
       );
       this.note = await response.data;
       this.content = await this.note.content;
@@ -141,7 +141,7 @@ export default {
     async fetchTags() {
       try {
         const res = await axios.get(
-          "http://localhost:3000/tags/" + this.userSettings.id
+          process.env.SPARK_DB_URL + "/tags/" + this.userSettings.id
         );
         this.tags = await res.data.tags;
       } catch (error) {
@@ -151,7 +151,7 @@ export default {
     async fetchUser() {
       try {
         const res2 = await axios.get(
-          "http://localhost:3000/users/" + this.$store.state.user.id
+          process.env.SPARK_DB_URL + "/users/" + this.$store.state.user.id
         );
         this.userSettings = await res2.data[0];
         await this.fetchTags();

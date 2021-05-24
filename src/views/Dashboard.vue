@@ -339,7 +339,7 @@ export default Vue.extend({
     },
     async deleteNote(id) {
       try {
-        await axios.delete("http://localhost:3000/notes/" + id);
+        await axios.delete(process.env.VUE_APP_SPARK_DB_URL + "/notes/" + id);
         this.$store.dispatch("notify", "Note deleted");
         this.fetchAllNotes();
       } catch (err) {
@@ -353,7 +353,9 @@ export default Vue.extend({
         this.error = "";
         await this.fetchUser();
         await this.fetchTags();
-        const response = await axios.get("http://localhost:3000/notes");
+        const response = await axios.get(
+          process.env.VUE_APP_SPARK_DB_URL + "/notes"
+        );
         this.notes = response.data;
         // filter to only display notes created by current user
         // this.notes = this.notes.filter((note) => {
@@ -435,7 +437,7 @@ export default Vue.extend({
     async fetchTags() {
       try {
         const res = await axios.get(
-          "http://localhost:3000/tags/" + this.userSettings.id
+          process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id
         );
         this.tags = await res.data.tags;
         //console.log(this.tags);
@@ -446,7 +448,9 @@ export default Vue.extend({
     async fetchUser() {
       try {
         const res2 = await axios.get(
-          "http://localhost:3000/users/" + this.$store.state.user.id
+          process.env.VUE_APP_SPARK_DB_URL +
+            "/users/" +
+            this.$store.state.user.id
         );
         this.userSettings = await res2.data[0];
         //await this.fetchTags();
