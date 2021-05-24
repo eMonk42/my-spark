@@ -136,7 +136,9 @@ export default {
       try {
         this.isLoading = true;
         const res2 = await axios.get(
-          process.env.SPARK_DB_URL + "/users/" + this.$store.state.user.id
+          process.env.VUE_APP_SPARK_DB_URL +
+            "/users/" +
+            this.$store.state.user.id
         );
         this.userSettings = await res2.data[0];
       } catch (err) {
@@ -167,7 +169,7 @@ export default {
       try {
         //console.log(this.userSettings);
         const res = await axios.patch(
-          process.env.SPARK_DB_URL + "/users",
+          process.env.VUE_APP_SPARK_DB_URL + "/users",
           this.userSettings
         );
         this.userSettings = res.data;
