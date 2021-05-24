@@ -4,7 +4,15 @@
     style="z-index: 999;"
   >
     <a id="top-anchor" href="#"></a>
-    <NavBar
+    <!-- <NavBar
+      @create-clicked="showCreate = true"
+      :profilepic="
+        userSettings.profilepic
+          ? pictures[parseInt(userSettings.profilepic) - 1]
+          : pictures[0]
+      "
+    /> -->
+    <NavBarLeft
       @create-clicked="showCreate = true"
       :profilepic="
         userSettings.profilepic
@@ -12,6 +20,7 @@
           : pictures[0]
       "
     />
+
     <!-- START FILTER OPTIONS -->
     <div
       class="flex justify-between my-6 pb-4 border-b border-purple-700 bg-gray-900"
@@ -272,7 +281,8 @@
 import Vue from "vue";
 import axios from "axios";
 import swal from "sweetalert2";
-import NavBar from "@/components/NavBar.vue";
+//import NavBar from "@/components/NavBar.vue";
+import NavBarLeft from "@/components/NavBarLeft.vue";
 import CreateNew from "@/components/CreateNew.vue";
 import EditNote from "@/components/EditNote.vue";
 import p001 from "@/assets/profile-pictures/001.png";
@@ -305,7 +315,7 @@ const pictures = [
 
 export default Vue.extend({
   name: "Dashboard",
-  components: { NavBar, CreateNew, EditNote },
+  components: { NavBarLeft, CreateNew, EditNote },
   data() {
     return {
       notes: [],
