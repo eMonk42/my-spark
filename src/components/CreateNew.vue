@@ -177,21 +177,11 @@ export default {
       try {
         this.newNote.title = this.title;
         this.newNote.content = this.content;
-        this.newNote.createdby = this.userSettings.id;
-        this.newNote.createdat = new Date();
-        this.newNote.updatedat = this.newNote.createdat;
-        //console.log(this.collection);
         if (this.collection == 0) {
           this.newNote.collection = this.tags[0].tag_id;
         } else {
-          // console.log(this.tags);
-          // this.newNote.collection = this.tags.filter((tag) => {
-          //   return this.collection == tag.tag_id;
-          // })[0].tag_id; //this.collection;
-          // console.log(this.newNote);
           this.newNote.collection = this.collection;
         }
-        //console.log(this.newNote);
         await axios.post(
           process.env.VUE_APP_SPARK_DB_URL + "/notes",
           this.newNote,
@@ -201,7 +191,6 @@ export default {
             },
           }
         );
-        //console.log(res);
         this.$store.dispatch("notify", "Note created successfully!");
         this.$emit("new-note-created");
       } catch (err) {
@@ -228,7 +217,6 @@ export default {
             },
           }
         );
-        //console.log(res.data);
         await this.syncTags();
         await this.fetchTags();
         this.$store.dispatch("notify", res.data);
@@ -257,7 +245,12 @@ export default {
         const res2 = await axios.get(
           process.env.VUE_APP_SPARK_DB_URL +
             "/users/" +
-            this.$store.state.user.id
+            this.$store.state.user.id,
+          {
+            headers: {
+              authorization: this.$store.state.token,
+            },
+          }
         );
         this.userSettings = await res2.data[0];
         await this.fetchTags();
@@ -273,7 +266,6 @@ export default {
     async syncTags() {
       try {
         const tagArray = this.tags;
-        //console.log(tagArray);
         const res = await axios.post(
           process.env.VUE_APP_SPARK_DB_URL + "/tags/" + this.userSettings.id,
           {
@@ -286,7 +278,6 @@ export default {
           }
         );
         console.log(res.data);
-        //this.showNewTag = false;
         this.$emit("tags-synced");
       } catch (err) {
         console.log(err.message);
@@ -296,7 +287,6 @@ export default {
   },
   mounted() {
     this.fetchUser();
-    //console.log(this.tags);
   },
   computed: {
     checkTitle() {

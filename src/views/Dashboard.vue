@@ -415,10 +415,9 @@ export default Vue.extend({
         this.userSettings.nickname +
         " ";
       if (!this.isLoading && this.isReady && this.tags) {
-        //console.log(this.tags, note.collection);
         let tag = this.tags.filter((tag) => {
           return tag.tag_id == note.collection;
-        })[0]; //.tag_name;
+        })[0];
         if (tag) dateString += tag.tag_name;
       }
       arr.forEach((word) => {
@@ -450,7 +449,6 @@ export default Vue.extend({
           }
         );
         this.tags = await res.data.tags;
-        //console.log(this.tags);
       } catch (error) {
         this.$store.dispatch("notify", error.message);
       }
@@ -468,13 +466,11 @@ export default Vue.extend({
           }
         );
         this.userSettings = await res2.data[0];
-        //await this.fetchTags();
       } catch (err) {
         console.log(err);
       }
     },
     checkIfBorder(note) {
-      //if (this.maxContentLength > 1) return true;
       if (this.notes == []) return false;
       const index = this.notes.indexOf(note);
       if (index == this.notes.length - 1) return false;
@@ -542,10 +538,8 @@ export default Vue.extend({
       await this.fetchAllNotes();
     },
     tagName(note) {
-      //console.log("tagName() here");
       for (let i = 0; i < this.tags.length; i++) {
         if (this.tags[i].tag_id == note.collection) {
-          //console.log("was here");
           return this.tags[i].tag_name;
         }
       }
