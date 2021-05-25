@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+    class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative"
   >
     <div class="max-w-md w-full space-y-8">
       <div>
@@ -17,7 +17,7 @@
           Don't have an account yet?
           <router-link
             :to="{ name: 'Register' }"
-            class="text-indigo-600 font-semibold hover:underline z-10"
+            class="text-indigo-600 font-semibold hover:underline z-50"
             >Sign up</router-link
           >
         </p>
