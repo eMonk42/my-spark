@@ -17,7 +17,7 @@
           Don't have an account yet?
           <router-link
             :to="{ name: 'Register' }"
-            class="text-indigo-600 font-semibold hover:underline"
+            class="text-indigo-600 font-semibold hover:underline z-10"
             >Sign up</router-link
           >
         </p>

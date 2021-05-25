@@ -17,7 +17,7 @@
           Already have an account?
           <router-link
             :to="{ name: 'Login' }"
-            class="text-indigo-600 font-semibold hover:underline"
+            class="text-indigo-600 font-semibold hover:underline z-10"
             >Login</router-link
           >
         </p>
