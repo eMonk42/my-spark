@@ -104,7 +104,6 @@ export default {
       this.navbarIsOpen = !this.navbarIsOpen;
       const navbar = document.getElementById("navbar");
       navbar.classList.toggle("translate");
-      console.log("you clicked me!");
     },
   },
 };
