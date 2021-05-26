@@ -6,11 +6,11 @@
     <!-- START NEW TAG CREATION -->
     <div
       v-if="showNewTag"
-      class="fixed w-full h-full top-0 right-0 bottom-0 left-0 bg-gray-800 bg-opacity-20 flex place-items-center"
+      class="fixed w-full h-full top-0 right-0 bottom-0 left-0 bg-transparent flex place-items-center"
       style="z-index: 99;"
     >
       <div
-        class="bg-gray-800 mx-auto min-w-64 p-8 text-gray-800 flex-col place-items-center"
+        class="bg-gray-800 mx-auto min-w-64 p-8 text-gray-800 flex-col place-items-center rounded-lg"
         style="z-index: 999;"
       >
         <!-- ACTUAL CONTENT -->
@@ -39,24 +39,24 @@
               class="bg-gray-400 mx-auto rounded-full block w-full h-full text-center hover:bg-gray-300 font-bold hover:scale-105 transform transition-all duration-100"
               href="#"
               style="padding-top: 1px;"
-              @click="tags.push({ tag_name: 'my new Tag' })"
+              @click="tags.push({ tag_name: 'my new Tag' }), syncTags()"
               ><span>+</span></a
             >
           </div>
         </div>
         <!-- BUTTONS -->
-        <div class="flex justify-between mt-8">
-          <button
+        <div class="mt-8 flex">
+          <!-- <button
             class="border border-gray-400 text-gray-400 py-2 px-4 rounded-lg hover:border-purple-500 hover:text-purple-300"
             @click="
               (showNewTag = false), $emit('tags-updated-sof'), fetchUser()
             "
           >
             Discard
-          </button>
+          </button> -->
           <button
-            class="bg-purple-800 text-white py-2 px-4 rounded-lg hover:bg-purple-600 -mr-2"
-            @click="submitTags"
+            class="bg-purple-800 text-white py-2 px-4 ml-auto rounded-lg hover:bg-purple-600"
+            @click="(showNewTag = !showNewTag), syncTags()"
           >
             Done
           </button>
@@ -277,7 +277,9 @@ export default {
             },
           }
         );
+        await this.fetchTags();
         console.log(res.data);
+        this.$store.dispatch("notify", "Tags synced");
         this.$emit("tags-synced");
       } catch (err) {
         console.log(err.message);
